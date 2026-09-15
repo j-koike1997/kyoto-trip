@@ -49,6 +49,29 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   html=html.replace('満車なら高台寺駐車場へ。</td>','満車なら高台寺駐車場へ。<div class="parking-map-link"><a class="btn" href="'+mapHref('高台寺 駐車場 京都')+'" target="_blank" rel="noopener">高台寺Pを開く</a></div></td>');
   html=html.replace('満車時は周辺Times。</td>','満車時は周辺Times。<div class="parking-map-link"><a class="btn" href="'+mapHref('Times 唐橋町 大津')+'" target="_blank" rel="noopener">周辺Timesを探す</a></div></td>');
 
+  const historyPhotos=[
+    {img:'https://www.kunaicho.go.jp/visit/ryobo/images/photo_tomb_122_1.jpg',alt:'明治天皇 伏見桃山陵の拝所',title:'見どころ｜拝所正面と上円下方の陵',text:'木の鳥居と玉垣の奥に、明治天皇の陵が正面軸上に置かれています。伏見城本丸跡を含む桃山丘陵の高所に築かれたことと、古代的な陵墓形式を近代国家が再び採用した点に注目すると、この旅の「明治から古代へ遡る」入口がよく見えます。',source:'https://www.kunaicho.go.jp/visit/ryobo/122.html',credit:'宮内庁'},
+    {img:'https://www.gekkeikan.co.jp/enjoy/museum/lib/img/fushimi/index/img_fieldphoto16.jpg',alt:'鳥せい本店の酒蔵建築',title:'見どころ｜酒蔵を転用した白壁の店舗',text:'白壁と木部を組み合わせた外観は、伏見が日本有数の酒どころとして形成してきた町並みの一部です。食事だけでなく、酒造業が水・舟運・商業と結びついて伏見の都市文化をつくったことを、建物そのものから感じられます。',source:'https://www.gekkeikan.co.jp/enjoy/museum/zh-cn/fushimi/',credit:'月桂冠「伏見散策」'},
+    {img:'https://cdn-ak.f.st-hatena.com/images/fotolife/y/yomurashamroch/20220306/20220306234855.jpg',alt:'護王神社の狛いのしし',title:'見どころ｜狛犬ならぬ「狛いのしし」',text:'和気清麻呂（わけのきよまろ）が配流の途上で猪に助けられ、足の傷が癒えたという伝承にちなみ、境内には猪の意匠が数多くあります。人物史としては宇佐八幡宮神託事件、視覚的には「猪と足腰守護」を結びつけると覚えやすい場所です。',source:'https://www.yomurashamrock.me/entry/2022/03/10/002511',credit:'京都おすすめ散歩道'},
+    {img:'https://img.rurubu.jp/img_srw/andmore/images/0000497834/XPwTf3fJCS1dpHAgtcmMrx2oRhpKFBB0e6hDlqOx.jpg',alt:'鶴屋吉信本店の外観',title:'見どころ｜西陣に構える老舗京菓子店の本店',text:'深い藍色の暖簾と町家を思わせる外観に、京都の菓子文化が「宮廷・茶の湯・季節感」と結びついて発達してきたことが表れています。御菓印（ごかいん）だけでなく、店頭の意匠や季節の生菓子にも目を向けると文化史の寄り道になります。',source:'https://rurubu.jp/andmore/article/18382',credit:'るるぶ＆more.'},
+    {img:'https://www.keihan.co.jp/travel/common/img/sightseeing/seasonal-events/autumn-colors/img_autumn-colors_12_01.jpg',alt:'曼殊院門跡の枯山水庭園',title:'見どころ｜書院から眺める枯山水庭園',text:'白砂、苔、刈り込み、樹木を室内から額縁のように眺める構成が見どころです。門跡寺院（もんぜきじいん）らしい洗練された書院空間と庭が一体になり、比叡山の宗教世界が江戸期の皇室・公家文化へ接続したことを体感できます。',source:'https://www.keihan.co.jp/travel/en/sightseeing/seasonal-events/autumn-colors.html',credit:'京阪電車'},
+    {img:'https://assets.sparkle.travel/place/827f40ee-dc5c-11ee-9b39-c7c8948f11a7/tlj7es/640x427ablur.jpg',alt:'蓮華寺の庭園',title:'見どころ｜緑と水面が近い池泉庭園',text:'派手な伽藍より、木立・苔・池・石組がつくる静かな奥行きが魅力です。書院から座って眺めると、比叡山麓の湿潤な自然と江戸初期の庭園文化が一つの景観としてまとまって見えます。雨天時にもむしろ風情が増す場所です。',source:'https://www.sparkle.travel/tw/place/827f40ee-dc5c-11ee-9b39-c7c8948f11a7',credit:'Sparkle Travel'},
+    {img:'https://www.tabirai.net/tabirai-uploader/img/0012571/s1_0012571.jpg',alt:'比叡山ドライブウェイ夢見が丘からの眺望',title:'見どころ｜京都盆地と琵琶湖をつなぐ地形',text:'夢見が丘では大津市街と琵琶湖を高所から俯瞰できます。ここでは建築より「地理」が主役。平安京の東北にそびえる比叡山が、京都と近江を隔てながら同時につないだ宗教・交通の要衝だったことを景色で理解する地点です。',source:'https://tc.tabirai.net/sightseeing/article/shiga-hieizan-biwalake/',credit:'たびらい'},
+    {img:'https://svcstrg.cld.navitime.jp/travelguide/p25010019/p25010019_01.jpg',alt:'びわ湖大津プリンスホテル外観',title:'見どころ｜琵琶湖畔に立つ曲面の高層棟',text:'丹下健三（たんげけんぞう）の設計による高層棟は、古寺を巡った一日の最後に現代建築へ時間を一気に進める装置でもあります。湖岸から建物の曲面と琵琶湖を一緒に見ると、「古都の隣にある近代都市・大津」という旅の対比が際立ちます。',source:'https://travel.navitime.com/ja/area/jp/spot/02301-pn0003214/',credit:'NAVITIME Travel'},
+    {img:'https://blog-imgs-154.fc2.com/l/u/n/lunaticyuki2/sennyuji2022101617.jpg',alt:'泉涌寺の舎利殿',title:'見どころ｜皇室菩提寺を象徴する伽藍',text:'泉涌寺では大門をくぐった先の仏殿・舎利殿・御座所周辺を、単独の寺院建築ではなく皇室祭祀の空間として見るのがポイントです。舎利殿の公開は時期によりますが、伽藍配置全体が「御寺（みてら）」と呼ばれる理由を伝えます。',source:'https://lunaticyuki2.blog.fc2.com/blog-entry-20949.html',credit:'ゆきの食魔日記'},
+    {img:'https://ryobo.fromnara.com/photo/205-5L.jpg',alt:'月輪陵・後月輪陵の陵門',title:'見どころ｜歴代天皇陵が集まる陵門',text:'一つの門の奥に、中世から近世にかけての多数の天皇・皇族の陵墓が集約されています。個々の墳丘を眺めるというより、「皇統の記憶が泉涌寺の山内に重層している」こと自体が最大の見どころです。',source:'https://ryobo.fromnara.com/kyoto/205.html',credit:'陵墓探訪記'},
+    {img:'https://assets.st-note.com/img/1732276055-1giD86VBs2OHL37AluhFNPEr.jpg?width=1200',alt:'雲龍院の悟りの窓',title:'見どころ｜円窓「悟りの窓」と庭の切り取り',text:'円形の窓が庭を一幅の絵のように切り取ります。南北朝期の皇室との結びつきを持つ寺でありながら、見る体験は非常に静か。泉涌寺本坊の厳格さに対し、雲龍院では書院・写経・庭という私的な祈りの空間に注目すると違いが分かります。',source:'https://note.com/kensei1199/n/n7a92073c633a',credit:'note'},
+    {img:'https://stat.ameba.jp/user_images/20220501/22/hiro-5517/88/9b/j/o1080060815111250831.jpg',alt:'孝明天皇 後月輪東山陵の拝所',title:'見どころ｜幕末と明治を直結する陵',text:'森に囲まれた拝所の先に孝明天皇陵があります。ここでは陵の造形以上に、「この天皇の死の翌年に明治改元、やがて東京奠都へ」という時間の近さが重要です。父・孝明天皇から息子・明治天皇へ、この旅の冒頭と終盤がここでつながります。',source:'https://ameblo.jp/hiro-5517/entry-12740487759.html',credit:'心の癒し～神社・仏閣・御陵巡り～'},
+    {img:'https://images.mindtrip.ai/attractions/b135/951d/0d7f/a5c4/6081/2e35/e45a/e39f',alt:'幕末維新ミュージアム霊山歴史館の入口',title:'見どころ｜人物が一気に「実物史料」になる場所',text:'館内では坂本龍馬（さかもとりょうま）、新選組（しんせんぐみ）、倒幕・佐幕双方の人物を、書簡・武具・肖像などから立体的に追えます。寺社と陵墓で見てきた制度史を、最後に「個人の決断と衝突」の歴史へ変換するのがこの博物館の役目です。',source:'https://mindtrip.ai/attraction/kyoto/ryozen-museum/at-XAXcktUA',credit:'Mindtrip'},
+    {img:'https://img.activityjapan.com/11/63548/11000006354808_Uj3QnNH8_4.JPG?version=1775784035',alt:'れすとらん松喜屋本店の外観',title:'見どころ｜近江牛文化を現在につなぐ老舗',text:'近江牛（おうみぎゅう）は、京都・大阪へ食材を供給してきた近江の流通史とも結びつきます。昼食として楽しみつつ、「大津が京都の周縁ではなく、湖上交通と東海道を背景に独自の商業文化を持った町だった」という視点を補ってくれます。',source:'https://activityjapan.com/publish/plan/63548',credit:'Activity Japan'},
+    {img:'https://stat.ameba.jp/user_images/20200629/23/ins-oddy/e5/ab/j/o1024076814781799368.jpg?caw=800',alt:'土山サービスエリアの入口',title:'見どころ｜現代の東西交通を支える新名神の結節点',text:'旅の歴史テーマから見ると、土山は単なる休憩地点ではありません。古代から近世まで東西交通の要衝だった近江を、現代の高速道路ネットワークが引き継いでいる場所です。帰路のお土産購入と同時に「交通史の現在地」として見ると締まりが出ます。',source:'https://ameblo.jp/ins-oddy/entry-12607785628.html',credit:'プリンス備忘録'},
+    {img:'https://sengokudaimyo.com/s/PXL_20221115_060728597.jpg',alt:'大津市歴史博物館の近江大津宮復元模型',title:'見どころ｜近江大津宮（おうみおおつのみや）の復元模型',text:'雨天時に比叡山の眺望を諦めても、ここでは大津宮、坂本、堅田、大津百町、膳所城下町などを模型と実物資料で立体的に追えます。特に近江大津宮の復元模型は、京都遷都より前から近江が政治史の舞台だったことを一目で理解できる展示です。',source:'https://sengokudaimyo.com/podcast/episode-126',credit:'Sengoku Daimyo'}
+  ];
+  const photoHtml=p=>'<figure class="spot-visual"><img src="'+p.img+'" alt="'+p.alt+'" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest(\'figure\').classList.add(\'photo-error\')"><figcaption><strong>'+p.title+'</strong>'+p.text+'<br><a class="photo-source" href="'+p.source+'" target="_blank" rel="noopener">写真出典：'+p.credit+' ↗</a></figcaption></figure>';
+  let photoIndex=0;
+  html=html.replace(/<div class="history-body">/g,m=>m+(historyPhotos[photoIndex]?photoHtml(historyPhotos[photoIndex++]):''));
+  html=html.replace('<section class="section" id="history">','<section class="section" id="history"><div class="history-photo-note">写真は当日見るべきポイントがひと目で分かるように添えています。季節・公開範囲・展示内容は撮影時と異なる場合があります。</div>');
+
   const finalFix=`<style id="published-final-fix">
   html{font-size:17.5px!important}
   .timeline{position:relative!important;margin-left:0!important}
@@ -57,6 +80,14 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   .stop:before{left:25px!important;top:8px!important;width:14px!important;height:14px!important;border-width:3px!important}
   .time{grid-column:1!important;position:relative!important;z-index:2!important;margin-top:31px!important;padding:3px 2px 5px!important;text-align:center!important;white-space:normal!important;font-size:.91rem!important;line-height:1.28!important;font-weight:900!important;background:#f4f6f8!important;border-radius:8px!important}
   .stop-card{grid-column:2!important;min-width:0!important}
+  #history .history-photo-note{margin:8px 0 16px;padding:11px 13px;border-radius:12px;background:#f1eee5;color:#5a5140;font-size:.82rem;line-height:1.65}
+  .spot-visual{margin:14px 0 16px;border:1px solid #e1e5e9;border-radius:14px;overflow:hidden;background:#f7f8fa;box-shadow:0 5px 18px rgba(28,48,70,.06)}
+  .spot-visual img{display:block;width:100%;height:auto;max-height:340px;object-fit:cover;background:#e9edf0}
+  .spot-visual figcaption{padding:12px 14px 13px;font-size:.86rem;line-height:1.65;color:#4f5964}
+  .spot-visual figcaption strong{display:block;margin-bottom:3px;color:#173354;font-size:.94rem}
+  .spot-visual .photo-source{display:inline-block;margin-top:6px;font-size:.74rem;color:#6b7480;text-decoration:underline;text-underline-offset:2px}
+  .spot-visual.photo-error img{display:none}
+  .spot-visual.photo-error:before{content:'写真を読み込めませんでした';display:block;padding:16px;color:#6b7480;font-size:.82rem}
   #parking .parking-map-link{margin-top:8px}
   #parking .parking-map-link .btn{white-space:nowrap}
   @media(max-width:420px){.timeline:before{left:29px!important}.stop{grid-template-columns:58px minmax(0,1fr)!important;column-gap:16px!important}.stop:before{left:22px!important;top:8px!important}.time{font-size:.88rem!important;margin-top:31px!important}}
