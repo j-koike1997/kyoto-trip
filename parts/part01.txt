@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#173354" name="theme-color"/>
+<title>京都・大津 1泊2日 旅のしおり</title>
+<style>
+:root{
+  --navy:#173354; --navy2:#254a70; --gold:#b69b5f; --cream:#f6f1e6;
+  --paper:#fffdf8; --ink:#17202a; --muted:#66707c; --line:#d9dde3;
+  --rain:#3e6987; --green:#4d7255; --danger:#8b3a3a; --card:#ffffff;
+  --shadow:0 10px 30px rgba(24,42,66,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f6f8;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif;line-height:1.72}
+a{color:inherit}
+.hero{background:linear-gradient(145deg,#142d4d 0%,#203d61 66%,#315f78 100%);color:#fff;padding:20px 18px 28px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-92px;top:55px;background:rgba(83,151,177,.24)}
+.hero-inner{max-width:980px;margin:auto;position:relative;z-index:1}
+.cover{width:100%;max-width:760px;border-radius:14px;display:block;margin:0 auto 18px;box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.eyebrow{font-size:.77rem;letter-spacing:.16em;color:#e6d7ae;text-transform:uppercase;font-weight:700}
+h1{font-size:clamp(1.75rem,7vw,3rem);line-height:1.16;margin:.35rem 0 .5rem;letter-spacing:.02em}
+.subtitle{margin:0;color:#dce6ef;font-size:.96rem}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.tag{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.09);padding:5px 9px;border-radius:999px;font-size:.75rem}
+.sticky-nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;padding:8px 10px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.sticky-nav a{display:inline-block;text-decoration:none;padding:8px 10px;margin-right:2px;border-radius:10px;color:#3b4652;font-size:.83rem;font-weight:700}
+.sticky-nav a:hover{background:var(--cream);color:var(--navy)}
+main{max-width:980px;margin:auto;padding:16px 14px 72px}
+.section{margin:18px 0 28px}
+.section-title{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;color:var(--navy)}
+.section-title h2{font-size:1.35rem;margin:0}
+.section-title span{color:var(--gold);font-size:.76rem;font-weight:800;letter-spacing:.12em}
+.card{background:var(--card);border:1px solid #e5e8ec;border-radius:16px;padding:16px;box-shadow:var(--shadow);margin:10px 0}
+.story-card{border-left:4px solid var(--gold)}
+.story-card h3{margin:0 0 6px;color:var(--navy);font-size:1.05rem}
+.callout{background:var(--cream);border:1px solid #d5bf88;border-radius:14px;padding:15px 16px;margin:12px 0}
+.callout.warn{background:#fff3f2;border-color:#d99b96}
+.callout.rain{background:#edf4f8;border-color:#a8c5d6}
+.callout strong{color:var(--navy)}
+.next-card{margin-top:-18px;position:relative;z-index:5;background:#fff;border-radius:18px;padding:16px;box-shadow:0 12px 35px rgba(17,44,75,.16);border:1px solid #e5e8ec}
+.next-label{font-size:.72rem;color:var(--gold);font-weight:900;letter-spacing:.15em}
+.next-title{font-weight:800;color:var(--navy);font-size:1.15rem;margin-top:2px}
+.next-sub{color:var(--muted);font-size:.88rem}
+.mode-row{display:flex;gap:8px;margin-top:12px}
+.mode-btn{border:1px solid #cbd2d9;background:#fff;border-radius:10px;padding:8px 12px;font-weight:800;color:#4c5864;cursor:pointer}
+.mode-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.timeline{position:relative;margin-left:2px}
+.timeline:before{content:"";position:absolute;left:28px;top:12px;bottom:12px;width:2px;background:#d8dee5}
+.stop{display:grid;grid-template-columns:58px 1fr;gap:12px;position:relative;margin:0 0 12px}
+.stop:before{content:"";position:absolute;left:23px;top:25px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:3px solid #fff;box-shadow:0 0 0 2px #d4c18d;z-index:2}
+.stop.current:before{background:#d46d4e;box-shadow:0 0 0 4px rgba(212,109,78,.18)}
+.time{padding-top:17px;font-weight:900;color:var(--navy);font-size:.8rem;line-height:1.3;text-align:right}
+.stop-card{background:#fff;border-radius:14px;border:1px solid #e3e7eb;padding:13px 14px;box-shadow:0 5px 16px rgba(28,48,70,.06)}
+.stop-card h3{margin:0 0 4px;color:var(--navy);font-size:1rem}
+.meta{color:var(--muted);font-size:.79rem;margin-bottom:6px}
+.stop-card p{margin:4px 0;font-size:.88rem}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.btn{display:inline-block;text-decoration:none;border-radius:9px;padding:7px 10px;font-size:.78rem;font-weight:800;background:#f0f4f7;color:var(--navy);border:1px solid #d5dee7}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.gold{background:#f6edd7;border-color:#dbc78e;color:#664f1f}
+.grid2{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}.hero{padding:32px 24px 46px}main{padding-left:22px;padding-right:22px}.next-card{padding:20px 22px}}
+.info-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #dfe4e8;border-radius:14px;overflow:hidden;font-size:.82rem}
+.info-table th,.info-table td{padding:10px 9px;border-bottom:1px solid #e8ebee;vertical-align:top;text-align:left}
+.info-table th{background:#e8edf2;color:var(--navy);font-weight:900}
+.info-table tr:last-child td{border-bottom:0}
+details.history{backg
