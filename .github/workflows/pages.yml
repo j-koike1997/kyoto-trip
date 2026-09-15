@@ -23,6 +23,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Add character guide and Tabelog links
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='  const finalFix=`<style id="published-final-fix">'
+          inject="""  const peopleSection=await (await fetch('site/people.html',{cache:'no-store'})).text();
+          html=html.replace('<section class=\"section\" id=\"connections\">',peopleSection+'<section class=\"section\" id=\"connections\">');
+          html=html.replace('<a href=\"#chronology\">年表</a>','<a href=\"#people\">人物</a><a href=\"#chronology\">年表</a>');
+          html=html.replace('<a class=\"btn\" href=\"#history-2\">由来を見る</a>','<a class=\"btn\" href=\"#history-2\">由来を見る</a><a class=\"btn gold\" href=\"https://tabelog.com/kyoto/A2601/A260601/26001213/\" target=\"_blank\" rel=\"noopener\">食べログ</a>');
+          html=html.replace('<a class=\"btn\" href=\"#history-14\">由来を見る</a>','<a class=\"btn\" href=\"#history-14\">由来を見る</a><a class=\"btn gold\" href=\"https://tabelog.com/shiga/A2501/A250101/25000784/\" target=\"_blank\" rel=\"noopener\">食べログ</a>');
+          """
+          if 'site/people.html' not in s:
+              if marker not in s:
+                  raise SystemExit('injection marker not found')
+              s=s.replace(marker,inject+marker)
+              p.write_text(s)
+          PY
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
