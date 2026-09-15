@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173354">
+<title>京都・大津 1泊2日 旅のしおり</title>
+<style>
+html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif}
+.loading{min-height:100vh;display:grid;place-items:center;padding:28px;text-align:center}.box{max-width:520px}.kicker{color:#e6d7ae;font-size:12px;font-weight:800;letter-spacing:.16em}.title{font-size:28px;font-weight:900;margin:8px 0}.sub{color:#dce6ef;line-height:1.7}.dot{display:inline-block;width:8px;height:8px;margin:18px 4px 0;border-radius:50%;background:#e6d7ae;animation:p 1.2s infinite ease-in-out}.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}@keyframes p{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.err{display:none;margin-top:18px;padding:14px;border:1px solid rgba(255,255,255,.25);border-radius:12px;background:rgba(255,255,255,.08);font-size:14px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="loading"><div class="box"><div class="kicker">TRAVEL BOOK · 2026.09.20–21</div><div class="title">京都・大津 1泊2日</div><div class="sub">旅のしおりを読み込んでいるにゃ</div><div><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="err" id="err"></div></div></div>
+<script>
+(async()=>{
+ try{
+  const files=['site/g1.txt','site/g2.txt','site/g3.txt','site/g4.txt','site/g5.txt'];
+  const chunks=await Promise.all(files.map(async p=>{const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(p+' の取得に失敗');return (await r.text()).trim();}));
+  const b64=chunks.join('');
+  const raw=atob(b64);
+  const bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  if(!('DecompressionStream' in window))throw new Error('このブラウザはページ展開機能に対応していません。Safariを最新版にしてください。');
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  let html=await new Response(stream).text();
+  const finalFix=`<style id="published-final-fix">
+  html{font-size:17.5px!important}
+  .timeline{position:relative!important;margin-left:0!important}
+  .timeline:before{left:32px!important;top:10px!important;bottom:10px!important;width:2px!important}
+  .stop{position:relative!important;display:grid!important;grid-template-columns:64px minmax(0,1fr)!important;column-gap:18px!important;align-items:start!important;margin:0 0 17px!important}
+  .stop:before{left:25px!important;top:8px!important;width:14px!important;height:14px!important;border-width:3px!important}
+  .time{grid-column:1!important;position:relative!important;z-index:2!important;margin-top:31px!important;padding:3px 2px 5px!important;text-align:center!important;white-space:normal!important;font-size:.91rem!important;line-height:1.28!important;font-weight:900!important;background:#f4f6f8!important;border-radius:8px!important}
+  .stop-card{grid-column:2!important;min-width:0!important}
+  @media(max-width:420px){.timeline:before{left:29px!important}.stop{grid-template-columns:58px minmax(0,1fr)!important;column-gap:16px!important}.stop:before{left:22px!important;top:8px!important}.time{font-size:.88rem!important;margin-top:31px!important}}
+  @media(max-width:360px){.timeline:before{left:27px!important}.stop{grid-template-columns:54px minmax(0,1fr)!important;column-gap:14px!important}.stop:before{left:20px!important;top:8px!important}.time{font-size:.83rem!important;letter-spacing:-.015em!important}}
+  </style>`;
+  html=html.replace('</head>',finalFix+'</head>');
+  document.open();document.write(html);document.close();
+ }catch(e){const el=document.getElementById('err');el.style.display='block';el.textContent='読み込みに失敗しました：'+e.message;}
+})();
+</script>
+</body>
+</html>
