@@ -25,6 +25,30 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   if(!('DecompressionStream' in window))throw new Error('このブラウザはページ展開機能に対応していません。Safariを最新版にしてください。');
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   let html=await new Response(stream).text();
+
+  const parkingMaps=[
+    ['明治天皇 伏見桃山陵（ふしみのももやまのみささぎ）','明治天皇 伏見桃山陵 駐車場'],
+    ['鳥せい本店','鳥せい本店 京都 駐車場'],
+    ['護王神社（ごおうじんじゃ）','護王神社 京都 駐車場'],
+    ['鶴屋吉信（つるやよしのぶ） 本店','鶴屋吉信 本店 駐車場'],
+    ['曼殊院門跡（まんしゅいんもんぜき）','曼殊院門跡 駐車場'],
+    ['蓮華寺（れんげじ）','蓮華寺 上高野 京都 駐車場'],
+    ['夢見が丘','夢見が丘 駐車場 比叡山ドライブウェイ'],
+    ['びわ湖大津プリンス','びわ湖大津プリンスホテル 駐車場'],
+    ['泉涌寺（せんにゅうじ）','御寺 泉涌寺 駐車場'],
+    ['霊山歴史館（りょうぜんれきしかん）','霊山歴史館 駐車場'],
+    ['松喜屋（まつきや）本店','松喜屋本店 大津 駐車場'],
+    ['土山SA','土山サービスエリア 上り 駐車場']
+  ];
+  const mapHref=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
+  for(const [label,query] of parkingMaps){
+    const needle='<td>'+label+'</td>';
+    const link='<div class="parking-map-link"><a class="btn primary" href="'+mapHref(query)+'" target="_blank" rel="noopener">地図を開く</a></div>';
+    html=html.replace(needle,'<td>'+label+link+'</td>');
+  }
+  html=html.replace('満車なら高台寺駐車場へ。</td>','満車なら高台寺駐車場へ。<div class="parking-map-link"><a class="btn" href="'+mapHref('高台寺 駐車場 京都')+'" target="_blank" rel="noopener">高台寺Pを開く</a></div></td>');
+  html=html.replace('満車時は周辺Times。</td>','満車時は周辺Times。<div class="parking-map-link"><a class="btn" href="'+mapHref('Times 唐橋町 大津')+'" target="_blank" rel="noopener">周辺Timesを探す</a></div></td>');
+
   const finalFix=`<style id="published-final-fix">
   html{font-size:17.5px!important}
   .timeline{position:relative!important;margin-left:0!important}
@@ -33,6 +57,8 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   .stop:before{left:25px!important;top:8px!important;width:14px!important;height:14px!important;border-width:3px!important}
   .time{grid-column:1!important;position:relative!important;z-index:2!important;margin-top:31px!important;padding:3px 2px 5px!important;text-align:center!important;white-space:normal!important;font-size:.91rem!important;line-height:1.28!important;font-weight:900!important;background:#f4f6f8!important;border-radius:8px!important}
   .stop-card{grid-column:2!important;min-width:0!important}
+  #parking .parking-map-link{margin-top:8px}
+  #parking .parking-map-link .btn{white-space:nowrap}
   @media(max-width:420px){.timeline:before{left:29px!important}.stop{grid-template-columns:58px minmax(0,1fr)!important;column-gap:16px!important}.stop:before{left:22px!important;top:8px!important}.time{font-size:.88rem!important;margin-top:31px!important}}
   @media(max-width:360px){.timeline:before{left:27px!important}.stop{grid-template-columns:54px minmax(0,1fr)!important;column-gap:14px!important}.stop:before{left:20px!important;top:8px!important}.time{font-size:.83rem!important;letter-spacing:-.015em!important}}
   </style>`;
