@@ -23,11 +23,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Add character guide, restaurant links and Kitanamaro hero portrait
+      - name: Add character guide, restaurant links, Kitanamaro portrait and banknote feature
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
+
+          # Main page runtime additions
           p=Path('index.html')
           s=p.read_text()
           marker='  const finalFix=`<style id="published-final-fix">'
@@ -43,6 +45,19 @@ jobs:
                   raise SystemExit('injection marker not found')
               s=s.replace(marker,inject+marker)
               p.write_text(s)
+
+          # Add the banknote story to Wake no Kiyomaro's character card.
+          pp=Path('site/people.html')
+          ps=pp.read_text()
+          if 'kitanamaro-banknote' not in ps:
+              css='''.kitanamaro-banknote{margin-top:14px;padding:13px;border:1px solid #d9c58c;border-radius:13px;background:#fbf7ed}.kitanamaro-banknote figure{margin:0}.kitanamaro-banknote img{display:block;width:100%;height:auto;border-radius:9px;background:#eee}.kitanamaro-banknote figcaption{margin-top:9px;font-size:.84rem;line-height:1.65;color:#4e5660}.kitanamaro-banknote figcaption strong{display:block;color:var(--navy);font-size:.94rem;margin-bottom:4px}.kitanamaro-banknote a{display:inline-block;margin-top:6px;color:#5f6670;text-decoration:underline;text-underline-offset:2px;font-size:.76rem}'''
+              ps=ps.replace('</style>',css+'</style>',1)
+              needle='<div class="person-keywords"><span>平安京</span><span>宇佐八幡宮神託事件</span><span>桓武天皇</span></div></article>'
+              feature='''<div class="kitanamaro-banknote"><figure><img src="https://www.npb.go.jp/museum/collection/gallery/osatu/ura-inosisi.images/img_gllry_72urainosisi.jpg" alt="日本銀行兌換券 甲10円 いのしし札（表面・裏面）" loading="lazy" decoding="async"><figcaption><strong>「きたなまろ」から、お札の顔へ</strong>和気清麻呂は明治23（1890）年の改造十円券以降、複数の10円券の肖像に採用された。なかでも明治32（1899）年発行の日本銀行兌換券・甲10円券は、表面に和気清麻呂と護王神社、裏面中央に大きな猪が描かれ、「いのしし札」の愛称で親しまれた。国立印刷局によると、清麻呂の精細な肖像画が残っていなかったため、肖像原図はキヨッソーネが木戸孝允をモデルに描いたといわれる。配流時に「別部穢麻呂（わけべのきたなまろ）」と改名させられた人物が、約1100年後に近代国家の紙幣へ繰り返し登場したことは、明治期に清麻呂がどのように顕彰されたかを象徴している。<br><a href="https://www.npb.go.jp/museum/collection/gallery/osatu/ura-inosisi.html" target="_blank" rel="noopener">国立印刷局「いのしし札」解説・画像出典 ↗</a></figcaption></figure></div><div class="person-keywords"><span>平安京</span><span>宇佐八幡宮神託事件</span><span>桓武天皇</span><span>10円札</span><span>いのしし札</span></div></article>'''
+              if needle not in ps:
+                  raise SystemExit('Wake no Kiyomaro card marker not found')
+              ps=ps.replace(needle,feature,1)
+              pp.write_text(ps)
           PY
       - name: Configure Pages
         uses: actions/configure-pages@v5
