@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Add character guide, restaurant links, Kitanamaro features and working rain plan
+      - name: Add character guide, restaurant links, Kitanamaro features, rain plan and catGPT tone
         shell: bash
         run: |
           python - <<'PY'
@@ -39,9 +39,9 @@ jobs:
           html=html.replace('<a class=\"btn\" href=\"#history-2\">由来を見る</a>','<a class=\"btn\" href=\"#history-2\">由来を見る</a><a class=\"btn gold\" href=\"https://tabelog.com/kyoto/A2601/A260601/26001213/\" target=\"_blank\" rel=\"noopener\">食べログ</a>');
           html=html.replace('<a class=\"btn\" href=\"#history-14\">由来を見る</a>','<a class=\"btn\" href=\"#history-14\">由来を見る</a><a class=\"btn gold\" href=\"https://tabelog.com/shiga/A2501/A250101/25000784/\" target=\"_blank\" rel=\"noopener\">食べログ</a>');
           html=html.replace('</head>','<style id=\"kitanamaro-hero-style\">.hero{position:relative;overflow:hidden}.hero:after{content:\"\";position:absolute;width:230px;height:230px;border-radius:50%;right:-92px;top:55px;z-index:0;opacity:.98;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.32),rgba(255,255,255,.18) 44%,rgba(83,151,177,.24) 100%),url(\"site/kitanamaro.svg\") center/80% no-repeat}.hero-inner{position:relative;z-index:1}@media(max-width:720px){.hero:after{width:176px;height:176px;right:-62px;top:86px;background-size:78%}}@media(max-width:480px){.hero:after{width:150px;height:150px;right:-56px;top:116px;background-size:76%;opacity:.95}}</style></head>');
-          html=html.replace('</body>','<script src=\"site/rain-fix.js\"><\\/script></body>');
+          html=html.replace('</body>','<script src=\"site/rain-fix.js\"><\\/script><script src=\"site/neko-tone.js\"><\\/script></body>');
           """
-          if 'site/people.html' not in s or 'kitanamaro-hero-style' not in s or 'site/rain-fix.js' not in s:
+          if 'site/people.html' not in s or 'kitanamaro-hero-style' not in s or 'site/rain-fix.js' not in s or 'site/neko-tone.js' not in s:
               if marker not in s:
                   raise SystemExit('injection marker not found')
               s=s.replace(marker,inject+marker)
