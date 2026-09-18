@@ -14,6 +14,11 @@
     .drive-steps .dd strong{color:#8a5a19}
     .drive-summary{margin-top:12px;padding:11px 12px;border-radius:12px;background:#f5f1e8;border-left:4px solid var(--gold);font-size:.86rem;line-height:1.7}
     .traffic-source-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .route-links{margin:12px 0 18px;padding:14px;border:1px solid #dbe2e8;border-radius:15px;background:#f8fafb;box-shadow:0 4px 14px rgba(28,48,70,.05)}
+    .route-links strong{display:block;color:var(--navy);margin-bottom:8px}
+    .route-links p{margin:0 0 10px;font-size:.84rem;line-height:1.65;color:#55616d}
+    .route-link-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .route-link-actions .btn.primary{font-weight:900}
     @media(min-width:760px){.drive-sim-grid{grid-template-columns:1fr 1fr}.drive-steps{grid-template-columns:105px 1fr}}
   `;
   document.head.appendChild(style);
@@ -26,7 +31,103 @@
     if(day1Link) nav.insertBefore(a,day1Link); else nav.appendChild(a);
   }
 
+  const routeUrl=(origin,destination,waypoints,mode='driving')=>{
+    const p=new URLSearchParams({
+      api:'1',
+      origin,
+      destination,
+      waypoints:waypoints.join('|'),
+      travelmode:mode
+    });
+    return 'https://www.google.com/maps/dir/?'+p.toString();
+  };
+
+  const day1Drive=routeUrl(
+    '三軒茶屋駅',
+    'びわ湖大津プリンスホテル',
+    [
+      '明治天皇 伏見桃山陵',
+      '京の台所 月の蔵人 京都',
+      '護王神社 京都',
+      '鶴屋吉信 本店',
+      '曼殊院門跡',
+      '蓮華寺 上高野 京都',
+      '夢見が丘 比叡山ドライブウェイ'
+    ]
+  );
+  const day1Rain=routeUrl(
+    '三軒茶屋駅',
+    'びわ湖大津プリンスホテル',
+    [
+      '明治天皇 伏見桃山陵',
+      '京の台所 月の蔵人 京都',
+      '護王神社 京都',
+      '鶴屋吉信 本店',
+      '曼殊院門跡',
+      '蓮華寺 上高野 京都',
+      '大津市歴史博物館'
+    ]
+  );
+  const day2Drive=routeUrl(
+    'びわ湖大津プリンスホテル',
+    '三軒茶屋駅',
+    [
+      '御寺 泉涌寺 駐車場',
+      '霊山歴史館',
+      'れすとらん松喜屋本店',
+      '土山サービスエリア 上り',
+      'NEOPASA静岡 上り'
+    ]
+  );
+  const day2Walk=routeUrl(
+    '御寺 泉涌寺 駐車場',
+    '御寺 泉涌寺 駐車場',
+    [
+      '御寺 泉涌寺',
+      '月輪陵',
+      '雲龍院',
+      '孝明天皇 後月輪東山陵',
+      '月輪陵墓監区事務所'
+    ],
+    'walking'
+  );
+
+  const addRouteLinks=(section,title,body,buttons)=>{
+    if(!section || section.querySelector('.route-links')) return;
+    const box=document.createElement('div');
+    box.className='route-links';
+    box.innerHTML='<strong>'+title+'</strong><p>'+body+'</p><div class="route-link-actions">'+buttons.map(b=>'<a class="btn '+(b.primary?'primary':'')+'" target="_blank" rel="noopener" href="'+b.href+'">'+b.label+'</a>').join('')+'</div>';
+    const timeline=section.querySelector('.timeline');
+    if(timeline) section.insertBefore(box,timeline);
+    else{
+      const titleEl=section.querySelector('.section-title');
+      if(titleEl) titleEl.insertAdjacentElement('afterend',box);
+      else section.prepend(box);
+    }
+  };
+
   const day1Section=document.getElementById('day1');
+  addRouteLinks(
+    day1Section,
+    'Google Maps｜DAY1 一筆書きルート',
+    '三軒茶屋 → 伏見桃山陵 → 月の蔵人 → 護王神社 → 鶴屋吉信 → 曼殊院 → 蓮華寺 → 夢見が丘 → 大津プリンス。比叡山を断念する場合は雨天版を使うにゃ。',
+    [
+      {label:'DAY1 通常ルートを開く',href:day1Drive,primary:true},
+      {label:'DAY1 雨天ルート',href:day1Rain,primary:false}
+    ]
+  );
+
+  const day2Section=document.getElementById('day2');
+  addRouteLinks(
+    day2Section,
+    'Google Maps｜DAY2 一筆書きルート',
+    '大津プリンス → 泉涌寺P → 霊山歴史館 → 松喜屋 → 土山SA → NEOPASA静岡 → 三軒茶屋。泉涌寺山内は車を置いたまま徒歩で一周するにゃ。',
+    [
+      {label:'DAY2 走行ルートを開く',href:day2Drive,primary:true},
+      {label:'泉涌寺 徒歩ルート',href:day2Walk,primary:false}
+    ]
+  );
+
   if(day1Section && !document.getElementById('drive-sim')){
     const sec=document.createElement('section');
     sec.className='section'; sec.id='drive-sim';
