@@ -138,6 +138,35 @@ def parking_status():
     source_times = []
     debug = {}
     try:
+        for label,u in (
+            ("_menu_json","https://www.c-ihighway.jp/datas/json/sapaMenu.json"),
+            ("_data_json","https://www.c-ihighway.jp/datas/json/sapaData.json"),
+        ):
+            pj = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",u],
+                                stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
+            body = pj.stdout.decode("utf-8","replace")
+            if body:
+                try:
+                    obj = json.loads(body)
+                    if label == "_menu_json":
+                        debug[label] = obj
+                    else:
+                        sample = {"keys":list(obj.keys())[:40],"announced":obj.get("announced")}
+                        matches = []
+                        def walk(x,path=""):
+                            if isinstance(x,dict):
+                                if "name" in x and any(k in str(x.get("name","")) for k in PARKING_TARGETS):
+                                    matches.append({"path":path,"value":x})
+                                for kk,vv in x.items():
+                                    walk(vv,path+"/"+str(kk))
+                            elif isinstance(x,list):
+                                for ii,vv in enumerate(x):
+                                    walk(vv,path+"/"+str(ii))
+                        walk(obj)
+                        sample["matches"] = matches[:30]
+                        debug[label] = sample
+                except Exception as e:
+                    debug[label] = {"error":str(e),"body":body[:1200]}
         jsu = "https://www.c-ihighway.jp/sp/recommend/js/RC_SapaStatus.js?1782831600"
         pjs = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",jsu],
                             stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
