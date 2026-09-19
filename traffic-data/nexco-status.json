@@ -1,0 +1,217 @@
+{
+  "sources": [
+    {
+      "name": "新東名・新名神（東京方面／東海）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=shintoumeiiseshinmeishinnobori",
+      "ok": false
+    },
+    {
+      "name": "新東名（東京方面／関東甲信越）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=shintoumeinobori",
+      "ok": false
+    },
+    {
+      "name": "東名・名神（東京方面／関東甲信越）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=toumeinobori",
+      "ok": false
+    },
+    {
+      "name": "東名・名神（東京方面／東海）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=toumeishinnobori",
+      "ok": false
+    }
+  ],
+  "events": [],
+  "weather": [],
+  "errors": [
+    {
+      "source": "新東名・新名神（東京方面／東海）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    },
+    {
+      "source": "新東名（東京方面／関東甲信越）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    },
+    {
+      "source": "東名・名神（東京方面／関東甲信越）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    },
+    {
+      "source": "東名・名神（東京方面／東海）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    }
+  ],
+  "updated_at_jst": "2026-09-20T03:10:04+09:00",
+  "overall": "caution",
+  "advisory_risk": true,
+  "forecast_risk": true,
+  "forecast_zone": null,
+  "advisory_excerpt": "重要なお知らせ\n【第3報】台風25号の影響による通行止めのお知らせ \n2026年9月19日\n16時現在\n台風25号の影響により、当社管内の以下の区間で、通行止めを実施しています。\nまた、9/21(月)以降は、東名、中央道等で同時に通行止めとなる可能性があります。\nやむを得ず高速道路をご利用の予定がある方は、最新の気象予測や道路交通情報をご確認いただき、外出時間の変更にご協力いただくなど、安全に十分注意した対応をお願いいたします。\nご理解とご協力をお願いいたします。\n最新の交通情報については、iHighway中日本(http://www.c-ihighway.jp/)をご確認下さい。\n■通行止めを開始した区間\n■今後、通行止めの可能性のある区間\n■路線図\n通行止めの可能性がある区間は こちら \n■ 局地的な大雨による道路の冠水にご注意ください。\n短時間での大雨により冠水が予想される場合には、冠水事故防止のため一部IC等を通行止めとする場合があります。\nまた、通行止めを実施していない箇所においても、局地的な大雨により冠水する恐れがあるため、安全に十分注意した対応をお願いいたします。\n■お出かけ前にご確認ください\n●各地方整備局や関係機関との合同発表 こちら \n●交通情報サイト \n・ iHighway中日本（NEXCO中日本） \n・ iHighway中日本スマホサイト（NEXCO中日本） \n・ 日本道路交通情報センター（JARTIC） \n・ 高速道路影響情報サイト \n・ みちラジ（交通情報アプリ） \n●NEXCO中日本 公式X \n・ 東京 支社公式アカウント \n●各高速道路会社公式WEBサイト \n・ NEXCO東日本公式WEBサイト \n・ NEXCO西日本公式WEBサイト \n●高速道路は、次のような場合などに通行止めをおこないます \n○雨が長時間降り続いた場合 （連続雨量）\n○連続雨量・時間雨量の組み合わせが一定以上（組み合わせ雨量）\n○走行に支障のある強風が確認された場合\n○高波の影響が確認された場合\n※通行止めが開始した場合、通行止め区間内のSA・PAをご利用のお客さまは通行止め解除まで移動できなくなる場合があります。\n※これまでに降った雨量により地盤が緩み、土砂災害が発生する危険性が高まっています。\nそのため、通行止め解除は、無降雨が一定時間続いた後、点検・作業をし、安全を確認したうえでおこないます。\nドライバーズサイトホーム \n交通情報 \n交通情報 \n現在の渋滞を知る \n全国の高速道路のリアルタイムの道路交通情報を提供しています。よく利用するルートをマイルートとして登録しておくと、通行止めや渋滞などの交通状況をメールで通知する無料のサービスをご利用いただけます。\nリアルタイム交通情報 \nJARTIC提供： \n--時--分 \n現在 \n北海道\n北陸・信越\n中国\n東北\n関東\n東海\n関西\n四国\n九州・沖縄\nリアルタイム交通情報 \nJARTIC提供： \n--時--分 \n現在 \n北海道\n北陸・信越\n中国\n東北\n関東\n東海\n関西\n四国\n九州・沖縄\nカレンダーから検索する \nカレンダーから日付を選択し、道路を指定すると、予測されている渋滞情報を検索することができます。 \n渋滞予測カレンダー \nルートから検索する \n出発インターチェンジと到着インターチェンジを入力すると、目的地までのルート上での、当日の渋滞予測を検索することができます。（NEXCO3社が管理する路線のみ） \n渋滞予測ルート検索 \n主要な渋滞箇所 \nNEXCO中日本管内の高速道路で交通集中に伴う渋滞が発生しやすい箇所をまとめました。 \n道路情報提供アプリ「みちラジ」 \nスマートフォンから渋滞・事故・通行止めの情報や所要時間情報などの最新の情報を音声でプッシュ通知※によりお知らせします。ドライブ",
+  "forecast_table": {
+    "known": true,
+    "image_url": "https://www.c-nexco.co.jp/images/urgency/1261/f465e15519fa6fac2c82bf8e78760628_916_292.png",
+    "image_key": "f465e15519fa6fac2c82bf8e78760628_916_292.png",
+    "rows": [
+      {
+        "road_code": "E1",
+        "road": "東名",
+        "direction": "上下",
+        "from": "富士IC",
+        "to": "清水JCT",
+        "window": "9/21 6時〜12時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E1A",
+        "road": "新東名",
+        "direction": "上下",
+        "from": "伊勢原JCT",
+        "to": "新秦野IC",
+        "window": "9/21 12時〜18時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E20",
+        "road": "中央道",
+        "direction": "上下",
+        "from": "八王子IC",
+        "to": "勝沼IC",
+        "window": "9/21 18時〜24時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E68",
+        "road": "中央道富士吉田線",
+        "direction": "上下",
+        "from": "大月JCT",
+        "to": "都留IC",
+        "window": "9/21 18時〜24時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E84",
+        "road": "西湘BP",
+        "direction": "上",
+        "from": "西湘二宮IC",
+        "to": "早川IC",
+        "window": "9/21 6時〜12時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E84",
+        "road": "西湘BP",
+        "direction": "上下",
+        "from": "石橋JCT",
+        "to": "石橋IC",
+        "window": "9/21 6時〜12時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E84",
+        "road": "西湘BP",
+        "direction": "上下",
+        "from": "小田原西IC",
+        "to": "箱根口IC",
+        "window": "9/21 6時〜12時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "E85",
+        "road": "小田厚",
+        "direction": "上下",
+        "from": "小田原西IC",
+        "to": "厚木IC",
+        "window": "9/21 12時〜18時 開始見込み",
+        "route_overlap": false
+      },
+      {
+        "road_code": "C4",
+        "road": "圏央道",
+        "direction": "上下",
+        "from": "圏央厚木IC",
+        "to": "あきる野IC",
+        "window": "9/21 12時〜18時 開始見込み",
+        "route_overlap": false
+      }
+    ],
+    "report": "第3報",
+    "reported_at": "2026-09-19 16:00"
+  },
+  "route_forecast": {
+    "exact": true,
+    "route_risk": false,
+    "relevant": [],
+    "reason": "検証済みNEXCO予告表と予定ルートを区間照合済み"
+  },
+  "parking": {
+    "岡崎": {
+      "display": "NEOPASA岡崎 上り",
+      "route": "新東名",
+      "order": 0,
+      "small": "空",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "0",
+      "large_code": "0",
+      "raw_name": "岡崎ＳＡ"
+    },
+    "浜松": {
+      "display": "NEOPASA浜松 上り",
+      "route": "新東名",
+      "order": 1,
+      "small": "満車",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "2",
+      "large_code": "0",
+      "raw_name": "浜松ＳＡ"
+    },
+    "静岡": {
+      "display": "NEOPASA静岡 上り",
+      "route": "新東名",
+      "order": 2,
+      "small": "空",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "0",
+      "large_code": "0",
+      "raw_name": "静岡ＳＡ"
+    },
+    "足柄": {
+      "display": "EXPASA足柄 上り",
+      "route": "東名",
+      "order": 3,
+      "small": "空",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "0",
+      "large_code": "0",
+      "raw_name": "足柄ＳＡ"
+    }
+  },
+  "parking_source_times": [
+    "2026-09-20 03:05"
+  ],
+  "base_recommendation": {
+    "code": "check",
+    "title": "現時点の予告区間は予定ルートと重ならない",
+    "place": "岡崎 → 浜松 → 静岡で継続監視",
+    "reason": "NEXCOの最新予告表を区間単位で照合した結果、現在の通行止め予告区間は予定している新東名→御殿場→東名の帰路と直接重なっていません。ただし台風進路で更新されるため、各SAで再判定してください。",
+    "basis": "exact_forecast_clear",
+    "forecast_rows": []
+  },
+  "recommendation": {
+    "code": "check",
+    "title": "現時点の予告区間は予定ルートと重ならない",
+    "place": "岡崎 → 浜松 → 静岡で継続監視",
+    "reason": "NEXCOの最新予告表を区間単位で照合した結果、現在の通行止め予告区間は予定している新東名→御殿場→東名の帰路と直接重なっていません。ただし台風進路で更新されるため、各SAで再判定してください。",
+    "basis": "exact_forecast_clear",
+    "forecast_rows": []
+  },
+  "official_links": {
+    "ihighway": "https://www.c-ihighway.jp/",
+    "highway_telephone": "https://c-nexco.highway-telephone.jp/main/",
+    "nexco": "https://www.c-nexco.co.jp/jam/"
+  },
+  "note": "NEXCO中日本の公開交通情報を自動判定。最終判断は公式画面・現地表示を優先してください。"
+}
