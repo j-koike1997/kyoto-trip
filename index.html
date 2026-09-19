@@ -72,6 +72,12 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   html=html.replace(/<div class="history-body">/g,m=>m+(historyPhotos[photoIndex]?photoHtml(historyPhotos[photoIndex++]):''));
   html=html.replace('<section class="section" id="history">','<section class="section" id="history"><div class="history-photo-note">写真は当日見るべきポイントがひと目で分かるように添えています。季節・公開範囲・展示内容は撮影時と異なる場合があります。</div>');
 
+  // SA_RETREAT_NAV_V1
+  // Add a top-nav anchor to the emergency retreat section while preserving the existing nav styling.
+  if(!html.includes('href="#sa-retreat"')){
+    html=html.replace(/<\/nav>/i,'<a href="#sa-retreat">退避</a></nav>');
+  }
+
   // SA_RETREAT_PLAN_V1
   const retreatSection = '<style id="sa-retreat-style">' +
     '.retreat-head{margin:4px 0 16px;padding:16px 17px;border-radius:14px;background:#173354;color:#fff}.retreat-head .eyebrow{font-size:.74rem;font-weight:900;letter-spacing:.12em;color:#e6d7ae}.retreat-head h2{margin:5px 0 7px;font-size:1.32rem}.retreat-head p{margin:0;color:#edf3f8;font-size:.88rem;line-height:1.7}.retreat-rule{margin:12px 0 17px;padding:13px 14px;border-radius:12px;background:#fff2df;border:1px solid #edc988;color:#604516;font-weight:800;line-height:1.65}.retreat-flow{display:grid;gap:11px}.retreat-card{padding:14px;border:1px solid #dde3e8;border-radius:14px;background:#fff;box-shadow:0 4px 14px rgba(28,48,70,.05)}.retreat-card.primary{border:2px solid #c3983e;background:#fffdf7}.retreat-card.alert{border-left:5px solid #a34a3b}.retreat-card h3{margin:0 0 6px;color:#173354;font-size:1rem}.retreat-card p{margin:5px 0;color:#4f5964;font-size:.86rem;line-height:1.65}.retreat-tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.retreat-tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2f5;color:#435364;font-size:.72rem;font-weight:800}.retreat-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}.retreat-actions a{display:inline-block;padding:8px 11px;border-radius:9px;background:#173354;color:#fff!important;text-decoration:none;font-size:.78rem;font-weight:800}.retreat-actions a.secondary{background:#edf1f4;color:#173354!important}.retreat-check{margin:15px 0 0;padding:13px 14px;border-radius:12px;background:#f2f5f7;color:#3e4b57;font-size:.83rem;line-height:1.7}.retreat-check strong{color:#173354}.retreat-foot{margin-top:10px;color:#66717d;font-size:.76rem;line-height:1.65}@media(max-width:420px){.retreat-actions a{width:100%;text-align:center;box-sizing:border-box}}' +
