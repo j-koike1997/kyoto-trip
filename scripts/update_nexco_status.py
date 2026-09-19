@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, re, html, urllib.request, datetime, os, sys, ssl
+import json, re, html, urllib.request, datetime, os, sys, ssl, subprocess
 
 PAGES = [
   ("新東名・新名神（東京方面／東海）", "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=shintoumeiiseshinmeishinnobori"),
@@ -10,9 +10,30 @@ PAGES = [
 ADVISORY = "https://www.c-nexco.co.jp/jam/"
 
 def fetch(url):
+    if "highway-telephone.jp" in url:
+        cookie = "/tmp/nexco-cookie.txt"
+        base = "https://c-nexco.highway-telephone.jp/main/"
+        common = ["curl","-k","-L","--compressed","-sS","--max-time","20",
+                  "-A","Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1",
+                  "-H","Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                  "-H","Accept-Language: ja-JP,ja;q=0.9,en-US;q=0.7",
+                  "-e",base,"-c",cookie,"-b",cookie]
+        if not os.path.exists(cookie):
+            subprocess.run(common + [base], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+        p = subprocess.run(common + [url], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+        if p.returncode != 0:
+            raise RuntimeError(p.stderr.decode("utf-8","replace")[:300] or ("curl exit "+str(p.returncode)))
+        raw = p.stdout
+        if b"403 Forbidden" in raw[:5000] or b"<title>403" in raw[:5000]:
+            raise RuntimeError("HTTP 403: NEXCO route-detail page blocked automated access")
+        for enc in ("utf-8","shift_jis","cp932"):
+            try:
+                return raw.decode(enc)
+            except UnicodeDecodeError:
+                pass
+        return raw.decode("utf-8",errors="replace")
     req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0 kyoto-trip-nexco-monitor/1.0"})
-    ctx = ssl._create_unverified_context() if "highway-telephone.jp" in url else None
-    with urllib.request.urlopen(req, timeout=20, context=ctx) as r:
+    with urllib.request.urlopen(req, timeout=20) as r:
         raw = r.read()
         enc = r.headers.get_content_charset() or "utf-8"
         try:
