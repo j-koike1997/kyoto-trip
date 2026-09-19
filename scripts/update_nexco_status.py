@@ -142,7 +142,10 @@ def parking_status():
             raw = fetch(url)
             txt = textify(raw)
             hrefs = re.findall(r'href=["\\\']([^"\\\']+)["\\\']', raw, re.I)
-            debug[route] = {"text":txt[:1800],"links":[h for h in hrefs if "sapa" in h.lower() or "recommend" in h.lower()][:40]}
+            srcs = re.findall(r'src=["\\\']([^"\\\']+)["\\\']', raw, re.I)
+            debug[route] = {"text":txt[:1800],
+                            "links":[h for h in hrefs if "sapa" in h.lower() or "recommend" in h.lower()][:40],
+                            "scripts":[x for x in srcs if ".js" in x.lower()][:60]}
             tm = re.search(r"(\d{1,2})時(\d{2})分?現在", txt)
             if tm:
                 source_times.append(route+" "+tm.group(1)+":"+tm.group(2))
