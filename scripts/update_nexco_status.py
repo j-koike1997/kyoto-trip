@@ -89,7 +89,8 @@ def zone_for(s):
 
 def normalize_parking_text(s):
     s = s.replace("ＳＡ","SA").replace("ＰＡ","PA").replace("　"," ")
-    s = s.replace("空車","空").replace("混雑中","混雑").replace("満","満車")
+    s = s.replace("空車","空").replace("混雑中","混雑")
+    s = re.sub(r"(?<!満)満(?!車)", "満車", s)
     return re.sub(r"\s+"," ",s).strip()
 
 def extract_parking_rows(txt):
