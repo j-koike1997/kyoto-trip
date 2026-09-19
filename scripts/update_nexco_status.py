@@ -76,22 +76,39 @@ def zone_for(s):
             hits.append(z)
     return min(hits) if hits else None
 
-def recommendation(level, min_zone, has_weather, advisory_risk):
+def recommendation(level, min_zone, has_weather, advisory_risk, forecast_risk=False, forecast_zone=None):
+    # 実際の通行止めが出た場合は、その区間へ入らないことを最優先。
     if level == "stop":
         if min_zone == 0:
-            return {"code":"stay","title":"出発延期を優先","place":"大津・京都","reason":"大津〜愛知側を含む帰路前半に通行止め情報があります。高速へ入る前に待機してください。"}
+            return {"code":"stay","title":"出発延期を優先","place":"大津・京都","reason":"大津〜愛知側を含む帰路前半に通行止め情報があります。高速へ入る前に待機してください。","basis":"closure"}
         if min_zone == 1:
-            return {"code":"okazaki","title":"岡崎で退避","place":"NEOPASA岡崎 上り","reason":"浜松方面以東に通行止め情報があります。静岡県内へ無理に進まず岡崎を第一退避地点にしてください。"}
+            return {"code":"okazaki","title":"岡崎で退避","place":"NEOPASA岡崎 上り","reason":"浜松方面以東に通行止め情報があります。規制区間へ入らず岡崎で待機してください。","basis":"closure"}
         if min_zone == 2:
-            return {"code":"hamamatsu","title":"浜松で退避","place":"NEOPASA浜松 上り","reason":"静岡中部方面に通行止め情報があります。浜松で止まり、解除・迂回可否を再確認してください。"}
+            return {"code":"hamamatsu","title":"浜松で退避","place":"NEOPASA浜松 上り","reason":"静岡中部方面に通行止め情報があります。浜松で止まり、解除・迂回可否を再確認してください。","basis":"closure"}
         if min_zone == 3:
-            return {"code":"shizuoka","title":"静岡で退避","place":"NEOPASA静岡 上り","reason":"御殿場〜静岡東部方面に通行止め情報があります。足柄を目指して進まず静岡で待機してください。"}
+            return {"code":"shizuoka","title":"静岡で退避","place":"NEOPASA静岡 上り","reason":"御殿場〜静岡東部方面に通行止め情報があります。足柄を目指して進まず静岡で待機してください。","basis":"closure"}
         if min_zone == 4:
-            return {"code":"ashigara","title":"東側で退避","place":"EXPASA足柄 上り（到達済みなら）","reason":"神奈川・東京側に通行止め情報があります。すでに足柄まで安全に到達していれば足柄で待機。西側にいるなら静岡で再判断してください。"}
-        return {"code":"hold","title":"次のSAで止まって再確認","place":"岡崎／浜松／静岡","reason":"帰路上に通行止め情報があります。現在地より先の規制区間へ入らないでください。"}
+            return {"code":"ashigara","title":"足柄で退避","place":"EXPASA足柄 上り（到達済みなら）","reason":"神奈川・東京側に通行止め情報があります。足柄まで安全に到達済みなら足柄で待機し、西側にいるなら静岡で再判断してください。","basis":"closure"}
+        return {"code":"hold","title":"次の大型SAで止まる","place":"岡崎／浜松／静岡","reason":"帰路上に通行止め情報があります。現在地より先の規制区間へ入らないでください。","basis":"closure"}
+
+    # 重要：予告段階で一つ手前に止める。SA内で閉じ込められる前に退避するための先回りルール。
+    if forecast_risk:
+        if forecast_zone == 0:
+            return {"code":"stay","title":"予告段階で出発延期","place":"大津・京都","reason":"帰路前半に通行止めの可能性があります。規制開始前でも高速へ入らず、現地待機を優先してください。","basis":"forecast"}
+        if forecast_zone == 1:
+            return {"code":"okazaki","title":"予告を検知：岡崎で先回り退避","place":"NEOPASA岡崎 上り","reason":"浜松方面に通行止めの可能性があります。閉鎖後にSAで足止めされる前に、一つ手前の岡崎で止まってください。","basis":"forecast"}
+        if forecast_zone == 2:
+            return {"code":"hamamatsu","title":"予告を検知：浜松で先回り退避","place":"NEOPASA浜松 上り","reason":"静岡中部方面に通行止めの可能性があります。静岡SAまで粘らず、一つ手前の浜松で止まってください。","basis":"forecast"}
+        if forecast_zone == 3:
+            return {"code":"shizuoka","title":"予告を検知：静岡で先回り退避","place":"NEOPASA静岡 上り","reason":"御殿場・足柄方面に通行止めの可能性があります。足柄を目指さず、一つ手前の静岡で止まってください。","basis":"forecast"}
+        if forecast_zone == 4:
+            return {"code":"ashigara","title":"予告を検知：足柄で先回り退避","place":"EXPASA足柄 上り","reason":"神奈川・東京方面に通行止めの可能性があります。足柄まで安全に到達できる状況なら、東京側へ入る前に足柄で止まってください。","basis":"forecast"}
+        return {"code":"okazaki","title":"通行止め予告あり：岡崎を第一STOPに","place":"NEOPASA岡崎 上り","reason":"NEXCOが東名などで通行止めの可能性を告知しています。区間詳細を自動判定できないため、安全側に倒して岡崎を最初の退避基準にし、ここでiHighwayを確認してから先へ進んでください。","basis":"forecast"}
+
     if level == "caution" or has_weather or advisory_risk:
-        return {"code":"check","title":"各チェックポイントで再判定","place":"岡崎 → 浜松 → 静岡","reason":"通行規制・悪天候またはNEXCOの通行止め可能性情報があります。各SAで次区間を確認し、不安ならそこで退避してください。"}
-    return {"code":"go","title":"現時点で重大な通行止めなし","place":"通常ルート","reason":"取得できたNEXCO公式情報では、東京方面の東名・新東名に重大な通行止めを検出していません。岡崎・浜松・静岡で再確認しながら進んでください。"}
+        return {"code":"check","title":"一つ先へ進む前に再判定","place":"岡崎 → 浜松 → 静岡","reason":"悪天候または交通規制情報があります。各大型SAで次区間を確認し、通行止め予告が出たら一つ手前でSTOPしてください。","basis":"caution"}
+
+    return {"code":"go","title":"現時点で重大な規制予告なし","place":"通常ルート","reason":"取得できたNEXCO公式情報では重大な通行止め・予告を検出していません。それでも岡崎・浜松・静岡で次区間を再確認してください。","basis":"clear"}
 
 def main():
     result = {"sources":[],"events":[],"weather":[],"errors":[]}
@@ -123,13 +140,18 @@ def main():
             result["sources"].append({"name":name,"url":url,"ok":False})
 
     advisory_risk = False
+    forecast_risk = False
+    forecast_zone = None
     advisory_excerpt = ""
     try:
         atxt = textify(fetch(ADVISORY))
-        risk_terms = ["通行止めの可能性","通行止めを実施","東名、中央道","東名・中央道","新東名"]
+        risk_terms = ["通行止めの可能性","通行止めとなる可能性","通行止めを実施","東名、中央道","東名・中央道","新東名"]
         advisory_risk = any(t in atxt for t in risk_terms)
+        forecast_risk = ("通行止めの可能性" in atxt or "通行止めとなる可能性" in atxt)
         p = atxt.find("重要なお知らせ")
-        advisory_excerpt = atxt[p:p+800] if p >= 0 else atxt[:800]
+        advisory_excerpt = atxt[p:p+1600] if p >= 0 else atxt[:1600]
+        if forecast_risk:
+            forecast_zone = zone_for(advisory_excerpt)
     except Exception as e:
         result["errors"].append({"source":"NEXCO中日本 交通情報","error":str(e)})
 
@@ -141,8 +163,10 @@ def main():
       "updated_at_jst": now.isoformat(timespec="seconds"),
       "overall": overall,
       "advisory_risk": advisory_risk,
+      "forecast_risk": forecast_risk,
+      "forecast_zone": forecast_zone,
       "advisory_excerpt": advisory_excerpt,
-      "recommendation": recommendation(overall,min_zone,has_weather,advisory_risk),
+      "recommendation": recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone),
       "official_links": {
         "ihighway":"https://www.c-ihighway.jp/",
         "highway_telephone":"https://c-nexco.highway-telephone.jp/main/",
