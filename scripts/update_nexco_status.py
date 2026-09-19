@@ -201,6 +201,29 @@ def parking_status():
 
 def apply_parking_rule(rec, parking):
     # X2 is a passenger car, so small-car occupancy drives the decision.
+    rec = dict(rec)
+
+    # Even when the traffic forecast itself is only "check/go", parking capacity
+    # changes which SA can realistically serve as a retreat point.
+    if rec.get("code") in ("check","go","hold"):
+        ordered_names = ["岡崎","浜松","静岡","足柄"]
+        states = {k:parking.get(k,{}).get("small","不明") for k in ordered_names}
+        full = [k for k in ordered_names if states[k] == "満車"]
+        crowded = [k for k in ordered_names if states[k] == "混雑"]
+        usable = [k for k in ordered_names if states[k] == "空"]
+        rec["parking_summary"] = states
+        if full:
+            route = " → ".join(usable) if usable else "満空を再確認"
+            rec["title"] = "退避候補を再編："+ "・".join(full) +"は満車"
+            rec["place"] = route
+            rec["reason"] = rec.get("reason","")+" "+ "・".join(full) +"は小型車が満車のため、退避先として当てにしません。空いている大型SAを手前から使ってください。"
+            rec["basis"] = "parking_network_full"
+        elif crowded:
+            rec["title"] = rec.get("title","退避判断")+"（"+"・".join(crowded)+"混雑）"
+            rec["reason"] = rec.get("reason","")+" "+ "・".join(crowded) +"は小型車が混雑しています。到着前に満車へ変わる可能性があるため、一つ手前で再確認してください。"
+            rec["basis"] = "parking_network_crowded"
+        return rec
+
     code_to_key = {"okazaki":"岡崎","hamamatsu":"浜松","shizuoka":"静岡","ashigara":"足柄"}
     key = code_to_key.get(rec.get("code"))
     if not key:
