@@ -137,6 +137,19 @@ def parking_status():
     errors = []
     source_times = []
     debug = {}
+    try:
+        jsu = "https://www.c-ihighway.jp/sp/recommend/js/RC_SapaStatus.js?1782831600"
+        pjs = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",jsu],
+                            stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
+        jstxt = pjs.stdout.decode("utf-8","replace")
+        hits = []
+        for line in jstxt.splitlines():
+            low = line.lower()
+            if any(k in low for k in ("ajax","url","json","api","sapa","status")):
+                hits.append(line.strip())
+        debug["_js"] = hits[:160]
+    except Exception as e:
+        debug["_js_error"] = str(e)
     for route,url in PARKING_PAGES:
         try:
             raw = fetch(url)
