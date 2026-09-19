@@ -106,10 +106,12 @@ def parking_status():
     out = {k:{"display":v["display"],"route":v["route"],"order":v["order"],"small":"不明","large":"不明","source_ok":False} for k,v in PARKING_TARGETS.items()}
     errors = []
     source_times = []
+    debug = {}
     for route,url in PARKING_PAGES:
         try:
             raw = fetch(url)
             txt = textify(raw)
+            debug[route] = txt[:3500]
             tm = re.search(r"(\d{1,2})時(\d{2})分?現在", txt)
             if tm:
                 source_times.append(route+" "+tm.group(1)+":"+tm.group(2))
@@ -123,7 +125,7 @@ def parking_status():
                         break
         except Exception as e:
             errors.append({"source":"SAPA駐車場情報 "+route,"error":str(e)})
-    return out, errors, source_times
+    return out, errors, source_times, debug
 
 def apply_parking_rule(rec, parking):
     # X2 is a passenger car, so small-car occupancy drives the decision.
@@ -228,7 +230,7 @@ def main():
     except Exception as e:
         result["errors"].append({"source":"NEXCO中日本 交通情報","error":str(e)})
 
-    parking, parking_errors, parking_times = parking_status()
+    parking, parking_errors, parking_times, parking_debug = parking_status()
     result["errors"].extend(parking_errors)
 
     jst = datetime.timezone(datetime.timedelta(hours=9))
@@ -246,6 +248,7 @@ def main():
       "advisory_excerpt": advisory_excerpt,
       "parking": parking,
       "parking_source_times": parking_times,
+      "parking_debug": parking_debug,
       "recommendation": rec,
       "official_links": {
         "ihighway":"https://www.c-ihighway.jp/",
