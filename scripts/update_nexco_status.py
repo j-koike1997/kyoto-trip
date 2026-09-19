@@ -20,6 +20,27 @@ PARKING_TARGETS = {
 }
 PARKING_CODE = {"0":"空","1":"混雑","2":"満車"}
 
+# NEXCO's forecast-closure table is published as an image.  We only use
+# table versions that have been human-verified; an unknown image never
+# inherits old rows.
+FORECAST_TABLES = {
+  "f465e15519fa6fac2c82bf8e78760628_916_292.png": {
+    "report":"第3報",
+    "reported_at":"2026-09-19 16:00",
+    "rows":[
+      {"road_code":"E1","road":"東名","direction":"上下","from":"富士IC","to":"清水JCT","window":"9/21 6時〜12時 開始見込み","route_overlap":False},
+      {"road_code":"E1A","road":"新東名","direction":"上下","from":"伊勢原JCT","to":"新秦野IC","window":"9/21 12時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"E20","road":"中央道","direction":"上下","from":"八王子IC","to":"勝沼IC","window":"9/21 18時〜24時 開始見込み","route_overlap":False},
+      {"road_code":"E68","road":"中央道富士吉田線","direction":"上下","from":"大月JCT","to":"都留IC","window":"9/21 18時〜24時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"上","from":"西湘二宮IC","to":"早川IC","window":"9/21 6時〜12時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"上下","from":"石橋JCT","to":"石橋IC","window":"9/21 6時〜12時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"上下","from":"小田原西IC","to":"箱根口IC","window":"9/21 6時〜12時 開始見込み","route_overlap":False},
+      {"road_code":"E85","road":"小田厚","direction":"上下","from":"小田原西IC","to":"厚木IC","window":"9/21 12時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"C4","road":"圏央道","direction":"上下","from":"圏央厚木IC","to":"あきる野IC","window":"9/21 12時〜18時 開始見込み","route_overlap":False}
+    ]
+  }
+}
+
 def fetch(url):
     if "c-ihighway.jp" in url:
         chrome = None
@@ -217,7 +238,37 @@ def apply_parking_rule(rec, parking):
                 rec["basis"] = "parking_downstream_crowded"
     return rec
 
-def recommendation(level, min_zone, has_weather, advisory_risk, forecast_risk=False, forecast_zone=None):
+def forecast_table_meta(raw_html):
+    out = {"known":False,"image_url":None,"image_key":None,"rows":[],"report":None,"reported_at":None}
+    m = re.search(r"【(第\d+報)】台風25号[^<\n]*", raw_html)
+    if m:
+        out["report"] = m.group(1)
+    # Find the first image after the forecast-section heading.
+    pos = raw_html.find("今後、通行止めの可能性のある区間")
+    tail = raw_html[pos:pos+12000] if pos >= 0 else raw_html
+    im = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', tail, re.I)
+    if im:
+        url = html.unescape(im.group(1))
+        if url.startswith("/"):
+            url = "https://www.c-nexco.co.jp"+url
+        out["image_url"] = url
+        key = url.rsplit("/",1)[-1].split("?",1)[0]
+        out["image_key"] = key
+        if key in FORECAST_TABLES:
+            v = FORECAST_TABLES[key]
+            out.update({"known":True,"rows":v["rows"],"report":v["report"],"reported_at":v["reported_at"]})
+    return out
+
+def route_forecast_status(meta):
+    if not meta.get("image_url"):
+        return {"exact":False,"route_risk":None,"relevant":[],"reason":"NEXCO予告表を取得できません"}
+    if not meta.get("known"):
+        return {"exact":False,"route_risk":None,"relevant":[],"reason":"NEXCO予告表が更新されました。未検証の新表なので旧区間は使用しません"}
+    rel = [r for r in meta.get("rows",[]) if r.get("route_overlap")]
+    return {"exact":True,"route_risk":bool(rel),"relevant":rel,
+            "reason":"検証済みNEXCO予告表と予定ルートを区間照合済み"}
+
+def recommendation(level, min_zone, has_weather, advisory_risk, forecast_risk=False, forecast_zone=None, route_forecast=None):
     # 実際の通行止めが出た場合は、その区間へ入らないことを最優先。
     if level == "stop":
         if min_zone == 0:
@@ -232,7 +283,29 @@ def recommendation(level, min_zone, has_weather, advisory_risk, forecast_risk=Fa
             return {"code":"ashigara","title":"足柄で退避","place":"EXPASA足柄 上り（到達済みなら）","reason":"神奈川・東京側に通行止め情報があります。足柄まで安全に到達済みなら足柄で待機し、西側にいるなら静岡で再判断してください。","basis":"closure"}
         return {"code":"hold","title":"次の大型SAで止まる","place":"岡崎／浜松／静岡","reason":"帰路上に通行止め情報があります。現在地より先の規制区間へ入らないでください。","basis":"closure"}
 
-    # 重要：予告段階で一つ手前に止める。SA内で閉じ込められる前に退避するための先回りルール。
+    # Exact NEXCO forecast table overrides broad keyword matching.
+    if route_forecast is not None:
+        if route_forecast.get("exact") and route_forecast.get("route_risk"):
+            rr = route_forecast.get("relevant") or []
+            first = rr[0] if rr else {}
+            return {"code":"hold","title":"予定ルート上に通行止め予告区間あり",
+                    "place":"一つ手前の大型SAでSTOP",
+                    "reason":(first.get("road_code","")+" "+first.get("road","")+" "+
+                              first.get("from","")+"〜"+first.get("to","")+" "+
+                              first.get("window","")+"。実際の閉鎖開始前に手前で退避してください。").strip(),
+                    "basis":"exact_forecast","forecast_rows":rr}
+        if route_forecast.get("exact") and route_forecast.get("route_risk") is False:
+            return {"code":"check","title":"現時点の予告区間は予定ルートと重ならない",
+                    "place":"岡崎 → 浜松 → 静岡で継続監視",
+                    "reason":"NEXCOの最新予告表を区間単位で照合した結果、現在の通行止め予告区間は予定している新東名→御殿場→東名の帰路と直接重なっていません。ただし台風進路で更新されるため、各SAで再判定してください。",
+                    "basis":"exact_forecast_clear","forecast_rows":[]}
+        if route_forecast.get("exact") is False and forecast_risk:
+            return {"code":"check","title":"NEXCO予告表が更新：区間を再確認",
+                    "place":"次の大型SAでSTOPして公式表を確認",
+                    "reason":route_forecast.get("reason","NEXCOの予告表が更新されています。")+"。古い区間データでは判断せず、安全側に待機してください。",
+                    "basis":"forecast_table_changed"}
+
+    # 予告表を区間照合できない場合だけ広域警告をフォールバックに使う。
     if forecast_risk:
         if forecast_zone == 0:
             return {"code":"stay","title":"予告段階で出発延期","place":"大津・京都","reason":"帰路前半に通行止めの可能性があります。規制開始前でも高速へ入らず、現地待機を優先してください。","basis":"forecast"}
@@ -284,8 +357,11 @@ def main():
     forecast_risk = False
     forecast_zone = None
     advisory_excerpt = ""
+    forecast_meta = {"known":False,"image_url":None,"rows":[]}
+    route_forecast = {"exact":False,"route_risk":None,"relevant":[],"reason":"未取得"}
     try:
-        atxt = textify(fetch(ADVISORY))
+        araw = fetch(ADVISORY)
+        atxt = textify(araw)
         risk_terms = ["通行止めの可能性","通行止めとなる可能性","通行止めを実施","東名、中央道","東名・中央道","新東名"]
         advisory_risk = any(t in atxt for t in risk_terms)
         forecast_risk = ("通行止めの可能性" in atxt or "通行止めとなる可能性" in atxt)
@@ -293,6 +369,8 @@ def main():
         advisory_excerpt = atxt[p:p+1600] if p >= 0 else atxt[:1600]
         if forecast_risk:
             forecast_zone = zone_for(advisory_excerpt)
+        forecast_meta = forecast_table_meta(araw)
+        route_forecast = route_forecast_status(forecast_meta)
     except Exception as e:
         result["errors"].append({"source":"NEXCO中日本 交通情報","error":str(e)})
 
@@ -303,7 +381,7 @@ def main():
     now = datetime.datetime.now(jst)
     if result["errors"] and not any(x.get("ok") for x in result["sources"]):
         overall = "caution"
-    rec = recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone)
+    rec = recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone,route_forecast)
     rec = apply_parking_rule(rec, parking)
     result.update({
       "updated_at_jst": now.isoformat(timespec="seconds"),
@@ -312,6 +390,8 @@ def main():
       "forecast_risk": forecast_risk,
       "forecast_zone": forecast_zone,
       "advisory_excerpt": advisory_excerpt,
+      "forecast_table": forecast_meta,
+      "route_forecast": route_forecast,
       "parking": parking,
       "parking_source_times": parking_times,
       "recommendation": rec,
