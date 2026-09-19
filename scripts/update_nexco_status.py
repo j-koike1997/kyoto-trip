@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, re, html, urllib.request, datetime, os, sys
+import json, re, html, urllib.request, datetime, os, sys, ssl
 
 PAGES = [
   ("新東名・新名神（東京方面／東海）", "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=shintoumeiiseshinmeishinnobori"),
@@ -11,7 +11,8 @@ ADVISORY = "https://www.c-nexco.co.jp/jam/"
 
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0 kyoto-trip-nexco-monitor/1.0"})
-    with urllib.request.urlopen(req, timeout=20) as r:
+    ctx = ssl._create_unverified_context() if "highway-telephone.jp" in url else None
+    with urllib.request.urlopen(req, timeout=20, context=ctx) as r:
         raw = r.read()
         enc = r.headers.get_content_charset() or "utf-8"
         try:
@@ -113,6 +114,8 @@ def main():
 
     jst = datetime.timezone(datetime.timedelta(hours=9))
     now = datetime.datetime.now(jst)
+    if result["errors"] and not any(x.get("ok") for x in result["sources"]):
+        overall = "caution"
     result.update({
       "updated_at_jst": now.isoformat(timespec="seconds"),
       "overall": overall,
