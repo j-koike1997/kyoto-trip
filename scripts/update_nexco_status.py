@@ -21,6 +21,20 @@ PARKING_TARGETS = {
 
 def fetch(url):
     if "c-ihighway.jp" in url:
+        chrome = None
+        for cmd in ("google-chrome","google-chrome-stable","chromium","chromium-browser"):
+            if subprocess.run(["bash","-lc","command -v "+cmd],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode == 0:
+                chrome = cmd
+                break
+        if chrome:
+            p = subprocess.run([
+                chrome,"--headless=new","--disable-gpu","--no-sandbox",
+                "--disable-dev-shm-usage","--virtual-time-budget=6000",
+                "--dump-dom",url
+            ],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False,timeout=25)
+            raw = p.stdout
+            if p.returncode == 0 and raw:
+                return raw.decode("utf-8",errors="replace")
         cookie = "/tmp/ihighway-cookie.txt"
         common = ["curl","-L","--compressed","-sS","--max-time","20",
                   "-A","Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1",
@@ -35,11 +49,6 @@ def fetch(url):
         raw = p.stdout
         if not raw:
             raise RuntimeError("empty response from iHighway")
-        for enc in ("utf-8","shift_jis","cp932"):
-            try:
-                return raw.decode(enc)
-            except UnicodeDecodeError:
-                pass
         return raw.decode("utf-8",errors="replace")
     if "highway-telephone.jp" in url:
         cookie = "/tmp/nexco-cookie.txt"
