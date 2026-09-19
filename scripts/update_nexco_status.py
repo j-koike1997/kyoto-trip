@@ -381,8 +381,8 @@ def main():
     now = datetime.datetime.now(jst)
     if result["errors"] and not any(x.get("ok") for x in result["sources"]):
         overall = "caution"
-    rec = recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone,route_forecast)
-    rec = apply_parking_rule(rec, parking)
+    base_rec = recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone,route_forecast)
+    rec = apply_parking_rule(base_rec, parking)
     result.update({
       "updated_at_jst": now.isoformat(timespec="seconds"),
       "overall": overall,
@@ -394,6 +394,7 @@ def main():
       "route_forecast": route_forecast,
       "parking": parking,
       "parking_source_times": parking_times,
+      "base_recommendation": base_rec,
       "recommendation": rec,
       "official_links": {
         "ihighway":"https://www.c-ihighway.jp/",
