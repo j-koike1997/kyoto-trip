@@ -148,6 +148,16 @@ def parking_status():
             if any(k in low for k in ("ajax","url","json","api","sapa","status")):
                 hits.append(line.strip())
         debug["_js"] = hits[:160]
+        cju = "https://www.c-ihighway.jp/sp/common/js/CM_Constant.js?1788188400"
+        pc = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",cju],
+                            stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
+        ctxt = pc.stdout.decode("utf-8","replace")
+        chits = []
+        for line in ctxt.splitlines():
+            low = line.lower()
+            if any(k in low for k in ("sapa_data","sapa_menu","code_convert","cngst","sapa_status")):
+                chits.append(line.strip())
+        debug["_const"] = chits[:220]
     except Exception as e:
         debug["_js_error"] = str(e)
     for route,url in PARKING_PAGES:
