@@ -200,6 +200,21 @@ def apply_parking_rule(rec, parking):
         rec["title"] = rec.get("title","退避判断")+"（"+key+"混雑）"
         rec["reason"] = rec.get("reason","")+" "+key+"の小型車駐車場は混雑表示です。到着前に満車へ変わる可能性があるため、一つ手前のSAで再確認し、悪化していればそこでSTOPしてください。"
         rec["basis"] = "parking_crowded"
+
+    order = PARKING_TARGETS[key]["order"]
+    ordered = sorted(PARKING_TARGETS.items(), key=lambda kv: kv[1]["order"])
+    if order + 1 < len(ordered):
+        next_key = ordered[order + 1][0]
+        next_st = parking.get(next_key,{}).get("small","不明")
+        rec["next_parking"] = {"name":next_key,"status":next_st}
+        if next_st == "満車":
+            rec["title"] = rec.get("title","退避判断")+"／次の"+next_key+"は満車"
+            rec["reason"] = rec.get("reason","")+" 次の"+next_key+"は小型車が満車です。現在の退避候補を通過して"+next_key+"まで進まないでください。"
+            rec["basis"] = "parking_downstream_full"
+        elif next_st == "混雑":
+            rec["reason"] = rec.get("reason","")+" 次の"+next_key+"も混雑しているため、現在のSAで再確認してから進んでください。"
+            if rec.get("basis") not in ("parking_full","parking_downstream_full"):
+                rec["basis"] = "parking_downstream_crowded"
     return rec
 
 def recommendation(level, min_zone, has_weather, advisory_risk, forecast_risk=False, forecast_zone=None):
