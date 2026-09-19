@@ -1,0 +1,62 @@
+name: NEXCO live monitor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/update_nexco_status.py"
+      - ".github/workflows/nexco-monitor.yml"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: nexco-live-monitor
+  cancel-in-progress: true
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Check trip monitoring window
+        id: window
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOW="$(TZ=Asia/Tokyo date +%Y-%m-%dT%H:%M:%S)"
+          echo "JST: $NOW"
+          if [[ "$NOW" > "2026-09-22T12:00:00" ]]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            gh api -X PUT "repos/$GITHUB_REPOSITORY/actions/workflows/nexco-monitor.yml/disable" || true
+          elif [[ "$NOW" < "2026-09-19T18:00:00" ]]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch NEXCO official traffic data
+        if: steps.window.outputs.run == 'true'
+        run: python3 scripts/update_nexco_status.py
+
+      - name: Publish latest JSON to traffic-data branch
+        if: steps.window.outputs.run == 'true'
+        run: |
+          cp traffic-data/nexco-status.json /tmp/nexco-status.json
+          git config user.name "kyoto-trip traffic bot"
+          git config user.email "actions@users.noreply.github.com"
+          git switch --orphan traffic-publish
+          git rm -rf . >/dev/null 2>&1 || true
+          mkdir -p traffic-data
+          cp /tmp/nexco-status.json traffic-data/nexco-status.json
+          printf "Latest NEXCO status for the Kyoto trip.\n" > README.md
+          git add README.md traffic-data/nexco-status.json
+          git commit -m "Update NEXCO live status"
+          git push origin HEAD:traffic-data --force
