@@ -8,6 +8,16 @@ PAGES = [
   ("東名・名神（東京方面／東海）", "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=toumeishinnobori"),
 ]
 ADVISORY = "https://www.c-nexco.co.jp/jam/"
+PARKING_PAGES = [
+  ("東名", "https://www.c-ihighway.jp/cgi/sapa.cgi?site=smp&disp=list&road=1031"),
+  ("新東名", "https://www.c-ihighway.jp/cgi/sapa.cgi?site=smp&disp=list&road=103200&dir=0"),
+]
+PARKING_TARGETS = {
+  "岡崎": {"display":"NEOPASA岡崎 上り","route":"新東名","order":0},
+  "浜松": {"display":"NEOPASA浜松 上り","route":"新東名","order":1},
+  "静岡": {"display":"NEOPASA静岡 上り","route":"新東名","order":2},
+  "足柄": {"display":"EXPASA足柄 上り","route":"東名","order":3},
+}
 
 def fetch(url):
     if "highway-telephone.jp" in url:
@@ -75,6 +85,68 @@ def zone_for(s):
         if any(w in s for w in words):
             hits.append(z)
     return min(hits) if hits else None
+
+
+def normalize_parking_text(s):
+    s = s.replace("ＳＡ","SA").replace("ＰＡ","PA").replace("　"," ")
+    s = s.replace("空車","空").replace("混雑中","混雑").replace("満","満車")
+    return re.sub(r"\s+"," ",s).strip()
+
+def extract_parking_rows(txt):
+    t = normalize_parking_text(txt)
+    rows = []
+    # iHighway SAPA table: 方面 / 名称 / 小型車 / 大型車
+    pat = re.compile(r"(上り|下り)\s+([^\s]{1,30}?(?:SA|PA))\s+(空|混雑|満車|調整中|情報なし|－|-)\s+(空|混雑|満車|調整中|情報なし|－|-)")
+    for m in pat.finditer(t):
+        rows.append({"dir":m.group(1),"name":m.group(2),"small":m.group(3),"large":m.group(4)})
+    return rows
+
+def parking_status():
+    out = {k:{"display":v["display"],"route":v["route"],"order":v["order"],"small":"不明","large":"不明","source_ok":False} for k,v in PARKING_TARGETS.items()}
+    errors = []
+    source_times = []
+    for route,url in PARKING_PAGES:
+        try:
+            raw = fetch(url)
+            txt = textify(raw)
+            tm = re.search(r"(\d{1,2})時(\d{2})分?現在", txt)
+            if tm:
+                source_times.append(route+" "+tm.group(1)+":"+tm.group(2))
+            rows = extract_parking_rows(txt)
+            for key,meta in PARKING_TARGETS.items():
+                if meta["route"] != route:
+                    continue
+                for row in rows:
+                    if row["dir"] == "上り" and key in row["name"]:
+                        out[key].update({"small":row["small"],"large":row["large"],"source_ok":True,"raw_name":row["name"]})
+                        break
+        except Exception as e:
+            errors.append({"source":"SAPA駐車場情報 "+route,"error":str(e)})
+    return out, errors, source_times
+
+def apply_parking_rule(rec, parking):
+    # X2 is a passenger car, so small-car occupancy drives the decision.
+    code_to_key = {"okazaki":"岡崎","hamamatsu":"浜松","shizuoka":"静岡","ashigara":"足柄"}
+    key = code_to_key.get(rec.get("code"))
+    if not key:
+        return rec
+    st = parking.get(key,{}).get("small","不明")
+    rec = dict(rec)
+    rec["parking_status"] = st
+    if st == "満車":
+        order = PARKING_TARGETS[key]["order"]
+        prev = {0:("stay","大津・京都","岡崎が満車のため、帰路へ入る前に待機または鈴鹿PAで再確認"),
+                1:("okazaki","NEOPASA岡崎 上り","浜松が満車のため、浜松へ進まず岡崎でSTOP"),
+                2:("hamamatsu","NEOPASA浜松 上り","静岡が満車のため、静岡へ進まず浜松でSTOP"),
+                3:("shizuoka","NEOPASA静岡 上り","足柄が満車のため、御殿場方面へ進まず静岡でSTOP")}
+        code,place,reason = prev[order]
+        rec.update({"code":code,"title":key+"は満車：一つ手前でSTOP","place":place,
+                    "reason":reason+"。SA入口で詰まるリスクを避けます。","basis":"parking_full","blocked_sa":key})
+    elif st == "混雑":
+        rec["title"] = rec.get("title","退避判断")+"（"+key+"混雑）"
+        rec["reason"] = rec.get("reason","")+" "+key+"の小型車駐車場は混雑表示です。到着前に満車へ変わる可能性があるため、一つ手前のSAで再確認し、悪化していればそこでSTOPしてください。"
+        rec["basis"] = "parking_crowded"
+    return rec
 
 def recommendation(level, min_zone, has_weather, advisory_risk, forecast_risk=False, forecast_zone=None):
     # 実際の通行止めが出た場合は、その区間へ入らないことを最優先。
@@ -155,10 +227,15 @@ def main():
     except Exception as e:
         result["errors"].append({"source":"NEXCO中日本 交通情報","error":str(e)})
 
+    parking, parking_errors, parking_times = parking_status()
+    result["errors"].extend(parking_errors)
+
     jst = datetime.timezone(datetime.timedelta(hours=9))
     now = datetime.datetime.now(jst)
     if result["errors"] and not any(x.get("ok") for x in result["sources"]):
         overall = "caution"
+    rec = recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone)
+    rec = apply_parking_rule(rec, parking)
     result.update({
       "updated_at_jst": now.isoformat(timespec="seconds"),
       "overall": overall,
@@ -166,7 +243,9 @@ def main():
       "forecast_risk": forecast_risk,
       "forecast_zone": forecast_zone,
       "advisory_excerpt": advisory_excerpt,
-      "recommendation": recommendation(overall,min_zone,has_weather,advisory_risk,forecast_risk,forecast_zone),
+      "parking": parking,
+      "parking_source_times": parking_times,
+      "recommendation": rec,
       "official_links": {
         "ihighway":"https://www.c-ihighway.jp/",
         "highway_telephone":"https://c-nexco.highway-telephone.jp/main/",
