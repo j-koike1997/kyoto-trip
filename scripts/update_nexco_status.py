@@ -13,11 +13,12 @@ PARKING_PAGES = [
   ("新東名", "https://www.c-ihighway.jp/cgi/sapa.cgi?site=smp&disp=list&road=103200&dir=0"),
 ]
 PARKING_TARGETS = {
-  "岡崎": {"display":"NEOPASA岡崎 上り","route":"新東名","order":0},
-  "浜松": {"display":"NEOPASA浜松 上り","route":"新東名","order":1},
-  "静岡": {"display":"NEOPASA静岡 上り","route":"新東名","order":2},
-  "足柄": {"display":"EXPASA足柄 上り","route":"東名","order":3},
+  "岡崎": {"display":"NEOPASA岡崎 上り","route":"新東名","route_id":"103200","order":0},
+  "浜松": {"display":"NEOPASA浜松 上り","route":"新東名","route_id":"103200","order":1},
+  "静岡": {"display":"NEOPASA静岡 上り","route":"新東名","route_id":"103200","order":2},
+  "足柄": {"display":"EXPASA足柄 上り","route":"東名","route_id":"1031","order":3},
 }
+PARKING_CODE = {"0":"空","1":"混雑","2":"満車"}
 
 def fetch(url):
     if "c-ihighway.jp" in url:
@@ -133,85 +134,49 @@ def extract_parking_rows(txt):
     return rows
 
 def parking_status():
-    out = {k:{"display":v["display"],"route":v["route"],"order":v["order"],"small":"不明","large":"不明","source_ok":False} for k,v in PARKING_TARGETS.items()}
+    out = {
+        k:{
+            "display":v["display"],"route":v["route"],"order":v["order"],
+            "small":"不明","large":"不明","source_ok":False
+        } for k,v in PARKING_TARGETS.items()
+    }
     errors = []
     source_times = []
-    debug = {}
     try:
-        for label,u in (
-            ("_menu_json","https://www.c-ihighway.jp/datas/json/sapaMenu.json"),
-            ("_data_json","https://www.c-ihighway.jp/datas/json/sapaData.json"),
-        ):
-            pj = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",u],
-                                stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
-            body = pj.stdout.decode("utf-8","replace")
-            if body:
-                try:
-                    obj = json.loads(body)
-                    if label == "_menu_json":
-                        debug[label] = obj
-                    else:
-                        sample = {"keys":list(obj.keys())[:40],"announced":obj.get("announced")}
-                        matches = []
-                        def walk(x,path=""):
-                            if isinstance(x,dict):
-                                if "name" in x and any(k in str(x.get("name","")) for k in PARKING_TARGETS):
-                                    matches.append({"path":path,"value":x})
-                                for kk,vv in x.items():
-                                    walk(vv,path+"/"+str(kk))
-                            elif isinstance(x,list):
-                                for ii,vv in enumerate(x):
-                                    walk(vv,path+"/"+str(ii))
-                        walk(obj)
-                        sample["matches"] = matches[:30]
-                        debug[label] = sample
-                except Exception as e:
-                    debug[label] = {"error":str(e),"body":body[:1200]}
-        jsu = "https://www.c-ihighway.jp/sp/recommend/js/RC_SapaStatus.js?1782831600"
-        pjs = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",jsu],
-                            stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
-        jstxt = pjs.stdout.decode("utf-8","replace")
-        hits = []
-        for line in jstxt.splitlines():
-            low = line.lower()
-            if any(k in low for k in ("ajax","url","json","api","sapa","status")):
-                hits.append(line.strip())
-        debug["_js"] = hits[:160]
-        cju = "https://www.c-ihighway.jp/sp/common/js/CM_Constant.js?1788188400"
-        pc = subprocess.run(["curl","-L","--compressed","-sS","--max-time","15","-A","Mozilla/5.0",cju],
-                            stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False)
-        ctxt = pc.stdout.decode("utf-8","replace")
-        chits = []
-        for line in ctxt.splitlines():
-            low = line.lower()
-            if any(k in low for k in ("sapa_data","sapa_menu","code_convert","cngst","sapa_status")):
-                chits.append(line.strip())
-        debug["_const"] = chits[:220]
+        url = "https://www.c-ihighway.jp/datas/json/sapaData.json"
+        p = subprocess.run(
+            ["curl","-L","--compressed","-sS","--max-time","15",
+             "-A","Mozilla/5.0",url],
+            stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=False
+        )
+        if p.returncode != 0:
+            raise RuntimeError(p.stderr.decode("utf-8","replace")[:300] or ("curl exit "+str(p.returncode)))
+        data = json.loads(p.stdout.decode("utf-8","replace"))
+        ann = data.get("announced") or {}
+        if ann:
+            source_times.append("%04d-%02d-%02d %02d:%02d" % (
+                int(ann.get("year",0)),int(ann.get("month",0)),int(ann.get("day",0)),
+                int(ann.get("hour",0)),int(ann.get("min",0))
+            ))
+        for key,meta in PARKING_TARGETS.items():
+            road = data.get(meta["route_id"],{})
+            for row in road.get("sapa",[]):
+                name = str(row.get("name","")).replace("ＳＡ","SA").replace("ＰＡ","PA")
+                if row.get("direction") == "上り" and key in name:
+                    sc = str(row.get("cngstSmall",""))
+                    lc = str(row.get("cngstBig",""))
+                    out[key].update({
+                        "small":PARKING_CODE.get(sc,"不明"),
+                        "large":PARKING_CODE.get(lc,"不明"),
+                        "small_code":sc,
+                        "large_code":lc,
+                        "source_ok":True,
+                        "raw_name":row.get("name")
+                    })
+                    break
     except Exception as e:
-        debug["_js_error"] = str(e)
-    for route,url in PARKING_PAGES:
-        try:
-            raw = fetch(url)
-            txt = textify(raw)
-            hrefs = re.findall(r'href=["\\\']([^"\\\']+)["\\\']', raw, re.I)
-            srcs = re.findall(r'src=["\\\']([^"\\\']+)["\\\']', raw, re.I)
-            debug[route] = {"text":txt[:1800],
-                            "links":[h for h in hrefs if "sapa" in h.lower() or "recommend" in h.lower()][:40],
-                            "scripts":[x for x in srcs if ".js" in x.lower()][:60]}
-            tm = re.search(r"(\d{1,2})時(\d{2})分?現在", txt)
-            if tm:
-                source_times.append(route+" "+tm.group(1)+":"+tm.group(2))
-            rows = extract_parking_rows(txt)
-            for key,meta in PARKING_TARGETS.items():
-                if meta["route"] != route:
-                    continue
-                for row in rows:
-                    if row["dir"] == "上り" and key in row["name"]:
-                        out[key].update({"small":row["small"],"large":row["large"],"source_ok":True,"raw_name":row["name"]})
-                        break
-        except Exception as e:
-            errors.append({"source":"SAPA駐車場情報 "+route,"error":str(e)})
-    return out, errors, source_times, debug
+        errors.append({"source":"iHighway SAPA混雑状況","error":str(e)})
+    return out, errors, source_times
 
 def apply_parking_rule(rec, parking):
     # X2 is a passenger car, so small-car occupancy drives the decision.
@@ -316,7 +281,7 @@ def main():
     except Exception as e:
         result["errors"].append({"source":"NEXCO中日本 交通情報","error":str(e)})
 
-    parking, parking_errors, parking_times, parking_debug = parking_status()
+    parking, parking_errors, parking_times = parking_status()
     result["errors"].extend(parking_errors)
 
     jst = datetime.timezone(datetime.timedelta(hours=9))
@@ -334,7 +299,6 @@ def main():
       "advisory_excerpt": advisory_excerpt,
       "parking": parking,
       "parking_source_times": parking_times,
-      "parking_debug": parking_debug,
       "recommendation": rec,
       "official_links": {
         "ihighway":"https://www.c-ihighway.jp/",
