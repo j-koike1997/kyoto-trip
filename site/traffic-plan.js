@@ -76,7 +76,7 @@
       '霊山歴史館',
       'れすとらん松喜屋本店',
       '土山サービスエリア 上り',
-      'NEOPASA静岡 上り'
+      'NEOPASA浜松 上り'
     ]
   );
   const day2Walk=routeUrl(
@@ -121,7 +121,7 @@
   addRouteLinks(
     day2Section,
     'Google Maps｜DAY2 一筆書きルート',
-    '大津プリンス → 泉涌寺P → 霊山歴史館 → 松喜屋 → 土山SA → NEOPASA静岡 → 三軒茶屋。泉涌寺山内は車を置いたまま徒歩で一周するにゃ。',
+    '大津プリンス → 泉涌寺P → 霊山歴史館 → 松喜屋 → 土山SA → NEOPASA浜松（夕食）→ 三軒茶屋。泉涌寺山内は車を置いたまま徒歩で一周するにゃ。',
     [
       {label:'DAY2 走行ルートを開く',href:day2Drive,primary:true},
       {label:'泉涌寺 徒歩ルート',href:day2Walk,primary:false}
@@ -158,13 +158,13 @@
             <div class="dt">15:40–16:00</div><div class="dd"><strong>土山SA</strong> 休憩・お土産。</div>
             <div class="dt">16:30頃</div><div class="dd">四日市JCT。</div>
             <div class="dt">17:05頃</div><div class="dd">豊田東JCT。9/21上りの豊田JCT予測は午前帯なので基本回避。</div>
-            <div class="dt">18:00–18:15</div><div class="dd">休憩② <strong>NEOPASA静岡</strong>を追加。長距離運転の安全マージン。</div>
-            <div class="dt">19:00頃</div><div class="dd">御殿場JCT。</div>
-            <div class="dt">19:35–20:05</div><div class="dd"><strong>綾瀬SIC付近</strong>。15:00〜21:00の渋滞帯だが17時ピーク後。+15〜25分を想定。</div>
-            <div class="dt">20:15–20:35</div><div class="dd">東京IC。</div>
-            <div class="dt">20:40–21:10</div><div class="dd"><strong>三軒茶屋 到着目安</strong>。強雨・事故時は+30分以上を見る。</div>
+            <div class="dt">18:00–18:45頃</div><div class="dd">夕食 <strong>NEOPASA浜松（上り）</strong>。石松の浜松餃子を第一候補に、40〜45分休憩。</div>
+            <div class="dt">19:30頃</div><div class="dd">静岡方面へ。必要なら途中で短いトイレ休憩のみ追加。</div>
+            <div class="dt">20:05–20:35</div><div class="dd"><strong>綾瀬SIC付近</strong>。ピーク後半〜終盤を通過する想定。+15〜25分を予算化。</div>
+            <div class="dt">20:45–21:05</div><div class="dd">東京IC。</div>
+            <div class="dt">21:10–21:40</div><div class="dd"><strong>三軒茶屋 到着目安</strong>。夕食45分を織り込み。強雨・事故時はさらに+30分以上を見る。</div>
           </div>
-          <div class="drive-summary">旧しおりの21:05〜21:50は安全側すぎたため、最新予測では<strong>20:40〜21:10</strong>を基本レンジに修正したにゃ。</div>
+          <div class="drive-summary">NEOPASA浜松で夕食を40〜45分取るため、三軒茶屋着は<strong>21:10〜21:40</strong>を基本レンジに再設定したにゃ。</div>
         </div>
       </div>
       <div class="traffic-source-links">
@@ -201,23 +201,23 @@
   if(tsuchiyama) setText(tsuchiyama,'.meta','20分休憩・お土産購入 / 売店24時間');
 
   const arrival=findStop('timeline2','三軒茶屋 着');
-  if(arrival && !findStop('timeline2','NEOPASA静岡')){
+  if(arrival && !findStop('timeline2','NEOPASA浜松')){
     const extra=document.createElement('div');
     extra.className='stop';
     extra.dataset.start='2026-09-21T18:00:00+09:00';
-    extra.dataset.end='2026-09-21T18:15:00+09:00';
-    extra.innerHTML='<div class="time">18:00–18:15頃</div><div class="stop-card"><h3>NEOPASA静岡｜安全休憩</h3><div class="meta">帰路2回目の休憩 / 10〜15分</div><p>土山から一気に東京まで走らず、新東名で短く休んで集中力を戻す。</p><div class="actions"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('NEOPASA静岡 上り')+'">地図</a></div></div>';
+    extra.dataset.end='2026-09-21T18:45:00+09:00';
+    extra.innerHTML='<div class="time">18:00–18:45頃</div><div class="stop-card"><h3>NEOPASA浜松（上り）｜夕食</h3><div class="meta">帰路2回目の休憩 / 40〜45分 / 浜松餃子候補</div><p>夕食はここで取る。第一候補は元祖 浜松ぎょうざ 石松。昼の近江牛から時間を空け、ご当地ものを軽めに楽しんでから東京へ戻る。</p><div class="actions"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('NEOPASA浜松 上り')+'">地図</a><a class="btn" target="_blank" rel="noopener" href="https://sapa.c-nexco.co.jp/sapa/shop?sapainfoid=199">店舗を見る</a></div></div>';
     arrival.parentNode.insertBefore(extra,arrival);
   }
   if(arrival){
-    arrival.dataset.start='2026-09-21T20:40:00+09:00';
-    arrival.dataset.end='2026-09-21T21:10:00+09:00';
-    setText(arrival,'.time','20:40–21:10頃');
-    setText(arrival,'.meta','基本ケース / 強雨・事故時は+30分以上');
-    setText(arrival,'.stop-card > p','土山SA＋NEOPASA静岡の2回休憩と、綾瀬のピーク後渋滞を織り込んだ到着レンジ。');
+    arrival.dataset.start='2026-09-21T21:10:00+09:00';
+    arrival.dataset.end='2026-09-21T21:40:00+09:00';
+    setText(arrival,'.time','21:10–21:40頃');
+    setText(arrival,'.meta','夕食45分込み / 強雨・事故時は+30分以上');
+    setText(arrival,'.stop-card > p','土山SA20分＋NEOPASA浜松で夕食40〜45分を取り、綾瀬のピーク後渋滞を織り込んだ到着レンジ。');
   }
   const d2call=[...document.querySelectorAll('#day2 > .callout')].find(x=>x.textContent.includes('帰路メモ'));
-  if(d2call) d2call.innerHTML='<strong>帰路メモ：</strong>15:00大津発は維持。土山SA20分＋NEOPASA静岡10〜15分の2回休憩を入れる。9/21上りの大津・岡崎ピークは回避し、綾瀬SIC付近はピーク後半を通過。三軒茶屋着は20:40〜21:10頃を基本レンジに修正。';
+  if(d2call) d2call.innerHTML='<strong>帰路メモ：</strong>15:00大津発は維持。土山SAで20分休憩・お土産、その後NEOPASA浜松（上り）で18:00頃から40〜45分の夕食。第一候補は浜松餃子。三軒茶屋着は21:10〜21:40頃を基本レンジに再設定。';
 
   function refreshNow(){
     const now=new Date();
