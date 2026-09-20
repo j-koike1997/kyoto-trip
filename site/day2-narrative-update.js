@@ -57,12 +57,20 @@
   }
 
   function rebuildStory(){
-    const story=sectionByHeading('旅の物語');
+    // Find the actual visible story heading, regardless of cat-tone rewriting.
+    const headings=[...document.querySelectorAll('h1,h2,h3')];
+    const h=headings.find(x=>{
+      const t=(x.textContent||'').replace(/\s+/g,'');
+      return t.includes('旅の物語') || t.includes('物語');
+    });
+    const story=h ? h.closest('section,.section') : null;
     if(!story) return;
 
-    // Replace the story itself, instead of merely appending a correction.
-    [...story.querySelectorAll('.story-card')].forEach(card=>card.remove());
+    const titleWrap=story.querySelector('.section-title');
+    const titleHtml=titleWrap ? titleWrap.outerHTML :
+      '<div class="section-title"><span>STORY</span><h2>ねこと読む、旅の物語</h2></div>';
 
+    // Replace the section body wholesale so no obsolete story survives above or below it.
     const cards=[
       {
         title:'第一章｜王権と都――伏見から京都へ',
@@ -95,13 +103,14 @@
       }
     ];
 
-    cards.forEach((x,i)=>{
-      const card=document.createElement('div');
-      card.className='card story-card';
-      if(i===cards.length-1) card.id='story-maibara-rengeji';
-      card.innerHTML='<h3>'+x.title+'</h3>'+x.body.map(p=>'<p>'+p+'</p>').join('');
-      story.appendChild(card);
-    });
+    const cardsHtml=cards.map((x,i)=>
+      '<div class="card story-card"'+(i===cards.length-1?' id="story-maibara-rengeji"':'')+'>'+
+      '<h3>'+x.title+'</h3>'+
+      x.body.map(p=>'<p>'+p+'</p>').join('')+
+      '</div>'
+    ).join('');
+
+    story.innerHTML=titleHtml+cardsHtml;
   }
 
   function linkRengejiOrigin(){
