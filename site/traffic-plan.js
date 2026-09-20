@@ -75,8 +75,8 @@
       '御寺 泉涌寺 駐車場',
       '霊山歴史館',
       'れすとらん松喜屋本店',
-      '土山サービスエリア 上り',
-      'NEOPASA浜松 上り'
+      '多賀サービスエリア 上り',
+      '蓮華寺 米原 滋賀'
     ]
   );
   const day2Walk=routeUrl(
@@ -121,7 +121,7 @@
   addRouteLinks(
     day2Section,
     'Google Maps｜DAY2 一筆書きルート',
-    '大津プリンス → 泉涌寺P → 霊山歴史館 → 松喜屋 → 土山SA → NEOPASA浜松（夕食）→ 三軒茶屋。泉涌寺山内は車を置いたまま徒歩で一周するにゃ。',
+    '大津プリンス → 泉涌寺P → 霊山歴史館 → 松喜屋（13:30予約）→ 多賀SA上り（京都土産）→ 米原・蓮華寺 → 三軒茶屋。蓮華寺は15:45着目標、16:00を実質最終ラインとして動くにゃ。',
     [
       {label:'DAY2 走行ルートを開く',href:day2Drive,primary:true},
       {label:'泉涌寺 徒歩ルート',href:day2Walk,primary:false}
@@ -152,19 +152,20 @@
           <div class="drive-summary">伏見桃山陵は9:50〜10:35を基本にゃ。月の蔵人は11:00予約済みなので、10:35に陵を出れば十分な移動余裕がある。到着が10:00を超えた場合だけ参拝を30〜35分に調整するにゃ。</div>
         </div>
         <div class="drive-sim-card">
-          <h3>9/21 帰路｜大津 → 三軒茶屋</h3>
+          <h3>9/21 帰路｜松喜屋 → 蓮華寺 → 三軒茶屋</h3>
           <div class="drive-steps">
-            <div class="dt">15:00</div><div class="dd">松喜屋から東京へ出発。大津IC朝渋滞はすでに終了。</div>
-            <div class="dt">15:40–16:00</div><div class="dd"><strong>土山SA</strong> 休憩・お土産。</div>
-            <div class="dt">16:30頃</div><div class="dd">四日市JCT。</div>
-            <div class="dt">17:05頃</div><div class="dd">豊田東JCT。9/21上りの豊田JCT予測は午前帯なので基本回避。</div>
-            <div class="dt">18:00–18:45頃</div><div class="dd">夕食 <strong>NEOPASA浜松（上り）</strong>。石松の浜松餃子を第一候補に、40〜45分休憩。</div>
-            <div class="dt">19:30頃</div><div class="dd">静岡方面へ。必要なら途中で短いトイレ休憩のみ追加。</div>
-            <div class="dt">20:05–20:35</div><div class="dd"><strong>綾瀬SIC付近</strong>。ピーク後半〜終盤を通過する想定。+15〜25分を予算化。</div>
-            <div class="dt">20:45–21:05</div><div class="dd">東京IC。</div>
-            <div class="dt">21:10–21:40</div><div class="dd"><strong>三軒茶屋 到着目安</strong>。夕食45分を織り込み。強雨・事故時はさらに+30分以上を見る。</div>
+            <div class="dt">13:30</div><div class="dd"><strong>松喜屋 本店</strong> 予約。食事は約60分を目安にする。</div>
+            <div class="dt">14:30</div><div class="dd"><strong>松喜屋 出発目標</strong>。名神・米原方面へ。</div>
+            <div class="dt">15:10–15:20</div><div class="dd"><strong>多賀SA（上り）</strong>。京都土産を10分程度で購入。遅れていたら買い物時間を短縮する。</div>
+            <div class="dt">15:40–15:50</div><div class="dd"><strong>米原・蓮華寺 到着目標</strong>。15:45を基準、16:00を実質最終ラインにする。</div>
+            <div class="dt">15:45–16:20</div><div class="dd">蓮華寺参拝。17:00閉門表記でも、受付早期終了を想定して余裕を確保。</div>
+            <div class="dt">16:20–16:30</div><div class="dd"><strong>蓮華寺 出発</strong>。米原ICから東京方面へ。</div>
+            <div class="dt">18:20頃</div><div class="dd">浜松付近。必要なら短い休憩のみ。夕食目的の長時間停車はしない。</div>
+            <div class="dt">19:20頃</div><div class="dd">静岡付近。雨・通行止め情報を再確認。</div>
+            <div class="dt">20:05–20:30</div><div class="dd"><strong>御殿場付近</strong>。強雨ピーク後を狙う時間帯。</div>
+            <div class="dt">21:10–21:45</div><div class="dd"><strong>三軒茶屋 到着目安</strong>。強雨・事故・通行止め時はさらに遅れる。</div>
           </div>
-          <div class="drive-summary">NEOPASA浜松で夕食を40〜45分取るため、三軒茶屋着は<strong>21:10〜21:40</strong>を基本レンジに再設定したにゃ。</div>
+          <div class="drive-summary"><strong>実戦ルール：</strong>松喜屋を14:40までに出られれば多賀SAで10分。14:40を超えたら5分、14:50を超えたら土産購入を飛ばして蓮華寺を優先するにゃ。</div>
         </div>
       </div>
       <div class="traffic-source-links">
@@ -192,32 +193,65 @@
   const d1call=[...document.querySelectorAll('#day1 > .callout')].find(x=>x.textContent.includes('渋滞メモ'));
   if(d1call) d1call.innerHTML='<strong>渋滞メモ：</strong>03:30出発を維持。東京側の綾瀬朝ピークは回避し、伊勢湾岸道の名港中央IC・湾岸長島IC付近（7:00〜12:00、8時ピーク）に+25〜40分を見込む。事故がなければ伏見桃山陵は9:30〜9:50頃が基本線。京都市内は休日混雑で5〜15分単位の揺れを持たせる。';
 
+  const matsukiya=findStop('timeline2','松喜屋');
+  if(matsukiya){
+    matsukiya.dataset.start='2026-09-21T13:30:00+09:00';
+    matsukiya.dataset.end='2026-09-21T14:30:00+09:00';
+    setText(matsukiya,'.time','13:30–14:30');
+    setText(matsukiya,'.meta','13:30予約固定 / 食事約60分 / 14:30出発目標');
+    setText(matsukiya,'.stop-card > p','予約時刻は動かさない。食事後は14:30を目標に出発し、名神で多賀SA・米原方面へ向かう。');
+  }
+
   const returnDepart=findStop('timeline2','東京へ出発');
   if(returnDepart){
-    setText(returnDepart,'.meta','15:00維持 / 瀬田東 → 新名神 → 伊勢湾岸 → 新東名');
-    setText(returnDepart,'.stop-card > p','大津・岡崎の予測ピークは回避。最後の綾瀬SIC上りだけ+15〜25分を予算化。');
+    returnDepart.dataset.start='2026-09-21T14:30:00+09:00';
+    returnDepart.dataset.end='2026-09-21T14:35:00+09:00';
+    setText(returnDepart,'.time','14:30');
+    setText(returnDepart,'h3','松喜屋 出発｜多賀SAへ');
+    setText(returnDepart,'.meta','14:30出発目標 / 名神・米原方面');
+    setText(returnDepart,'.stop-card > p','14:40までに出られれば多賀SAで10分買い物。14:50を超えたら土産購入を飛ばして蓮華寺を優先。');
   }
+
   const tsuchiyama=findStop('timeline2','土山SA');
-  if(tsuchiyama) setText(tsuchiyama,'.meta','20分休憩・お土産購入 / 売店24時間');
+  if(tsuchiyama){
+    tsuchiyama.dataset.start='2026-09-21T15:10:00+09:00';
+    tsuchiyama.dataset.end='2026-09-21T15:20:00+09:00';
+    setText(tsuchiyama,'.time','15:10–15:20');
+    setText(tsuchiyama,'h3','多賀SA（上り）｜京都土産');
+    setText(tsuchiyama,'.meta','10分目安 / 京都・大阪土産も扱う / 遅れたら短縮');
+    setText(tsuchiyama,'.stop-card > p','京都土産を短時間で購入。蓮華寺15:45着を優先し、時間が押したら5分に短縮、14:50松喜屋発以降はスキップ。');
+    const acts=tsuchiyama.querySelector('.actions');
+    if(acts){
+      const links=[...acts.querySelectorAll('a')];
+      if(links[0]){links[0].href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('多賀サービスエリア 上り');links[0].textContent='地図';}
+      if(links[1]){links[1].href='https://sapa.c-nexco.co.jp/sapa/shop?sapainfoid=49';links[1].textContent='店舗を見る';}
+    }
+  }
 
   const arrival=findStop('timeline2','三軒茶屋 着');
-  if(arrival && !findStop('timeline2','NEOPASA浜松')){
-    const extra=document.createElement('div');
-    extra.className='stop';
-    extra.dataset.start='2026-09-21T18:00:00+09:00';
-    extra.dataset.end='2026-09-21T18:45:00+09:00';
-    extra.innerHTML='<div class="time">18:00–18:45頃</div><div class="stop-card"><h3>NEOPASA浜松（上り）｜夕食</h3><div class="meta">帰路2回目の休憩 / 40〜45分 / 浜松餃子候補</div><p>夕食はここで取る。第一候補は元祖 浜松ぎょうざ 石松。昼の近江牛から時間を空け、ご当地ものを軽めに楽しんでから東京へ戻る。</p><div class="actions"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('NEOPASA浜松 上り')+'">地図</a><a class="btn" target="_blank" rel="noopener" href="https://sapa.c-nexco.co.jp/sapa/shop?sapainfoid=199">店舗を見る</a></div></div>';
-    arrival.parentNode.insertBefore(extra,arrival);
+  if(arrival && !findStop('timeline2','蓮華寺')){
+    const rengeji=document.createElement('div');
+    rengeji.className='stop';
+    rengeji.dataset.start='2026-09-21T15:45:00+09:00';
+    rengeji.dataset.end='2026-09-21T16:20:00+09:00';
+    rengeji.innerHTML='<div class="time">15:45–16:20</div><div class="stop-card"><h3>蓮華寺（米原）｜参拝</h3><div class="meta">15:45着目標 / 16:00実質最終ライン / 17:00閉門表記</div><p>今日の延暦寺の早期受付終了を踏まえ、17:00ぎりぎりは狙わない。15:45を基準に到着し、16:20頃には出発する。</p><div class="actions"><a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('蓮華寺 米原 滋賀')+'">地図</a><a class="btn" target="_blank" rel="noopener" href="https://maibara-rengeji.wixsite.com/rengeji/about">公式</a></div></div>';
+    arrival.parentNode.insertBefore(rengeji,arrival);
   }
+
+  // Remove any older dynamically-added Hamamatsu dinner stop if another script/version left it behind.
+  const oldHamamatsu=findStop('timeline2','NEOPASA浜松');
+  if(oldHamamatsu) oldHamamatsu.remove();
+
   if(arrival){
     arrival.dataset.start='2026-09-21T21:10:00+09:00';
-    arrival.dataset.end='2026-09-21T21:40:00+09:00';
-    setText(arrival,'.time','21:10–21:40頃');
-    setText(arrival,'.meta','夕食45分込み / 強雨・事故時は+30分以上');
-    setText(arrival,'.stop-card > p','土山SA20分＋NEOPASA浜松で夕食40〜45分を取り、綾瀬のピーク後渋滞を織り込んだ到着レンジ。');
+    arrival.dataset.end='2026-09-21T21:45:00+09:00';
+    setText(arrival,'.time','21:10–21:45頃');
+    setText(arrival,'.meta','蓮華寺16:20〜16:30発想定 / 強雨・事故時は+30分以上');
+    setText(arrival,'.stop-card > p','米原から東へ進み、必要最小限の休憩で東京へ。NEXCOの通行止め予告とSA満空は走行中もライブ欄で再確認する。');
   }
+
   const d2call=[...document.querySelectorAll('#day2 > .callout')].find(x=>x.textContent.includes('帰路メモ'));
-  if(d2call) d2call.innerHTML='<strong>帰路メモ：</strong>15:00大津発は維持。土山SAで20分休憩・お土産、その後NEOPASA浜松（上り）で18:00頃から40〜45分の夕食。第一候補は浜松餃子。三軒茶屋着は21:10〜21:40頃を基本レンジに再設定。';
+  if(d2call) d2call.innerHTML='<strong>帰路メモ：</strong>松喜屋13:30予約は固定。14:30発目標 → 多賀SA上りで京都土産10分 → 米原・蓮華寺15:45着目標 → 16:20〜16:30東京へ。蓮華寺は17:00表記でも16:00を実質最終ラインとして動く。';
 
   function refreshNow(){
     const now=new Date();
