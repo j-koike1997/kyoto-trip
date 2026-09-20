@@ -144,6 +144,8 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   @media(max-width:360px){.timeline:before{left:27px!important}.stop{grid-template-columns:54px minmax(0,1fr)!important;column-gap:14px!important}.stop:before{left:20px!important;top:8px!important}.time{font-size:.83rem!important;letter-spacing:-.015em!important}}
   </style>`;
   html=html.replace('</head>',finalFix+'</head>');
+  // DAY2_NARRATIVE_UPDATE_V1
+  html=html.replace('</body>','<script src="site/day2-narrative-update.js"><'+'/script></body>');
   document.open();document.write(html);document.close();
  }catch(e){const el=document.getElementById('err');el.style.display='block';el.textContent='読み込みに失敗しました：'+e.message;}
 })();
