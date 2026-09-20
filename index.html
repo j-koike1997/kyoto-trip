@@ -26,6 +26,22 @@ html,body{margin:0;min-height:100%;background:#173354;color:#fff;font-family:-ap
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   let html=await new Response(stream).text();
 
+  // KITANAMARO_HERO_V1
+  // Rebuild the user's Kitanamaro photo from small text chunks and use it for the first/top visual.
+  try{
+    const heroFiles=Array.from({length:8},(_,i)=>'site/kitanamaro_'+i+'.txt');
+    const heroChunks=await Promise.all(heroFiles.map(async p=>{
+      const r=await fetch(p,{cache:'no-store'});
+      if(!r.ok)throw new Error(p+' の取得に失敗');
+      return (await r.text()).trim();
+    }));
+    const heroSrc='data:image/jpeg;base64,'+heroChunks.join('');
+    html=html.replace(/(<img\b[^>]*\bsrc=["'])[^"']+(["'])/i,'$1'+heroSrc+'$2');
+    html=html.replace(/(<img\b[^>]*\balt=["'])[^"']*(["'])/i,'$1きたなまろ像$2');
+  }catch(e){
+    console.warn('Kitanamaro hero replacement failed',e);
+  }
+
   const parkingMaps=[
     ['明治天皇 伏見桃山陵（ふしみのももやまのみささぎ）','明治天皇 伏見桃山陵 駐車場'],
     ['京の台所 月の蔵人','京の台所 月の蔵人 駐車場'],
