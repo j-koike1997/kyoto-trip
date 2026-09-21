@@ -24,6 +24,22 @@ PARKING_CODE = {"0":"空","1":"混雑","2":"満車"}
 # table versions that have been human-verified; an unknown image never
 # inherits old rows.
 FORECAST_TABLES = {
+  # 2026-09-21 13:00 / 第8報
+  "17b474c86f8a5c16ba6d0f1908996316_780_241.jpg": {
+    "report":"第8報",
+    "reported_at":"2026-09-21 13:00",
+    "rows":[
+      {"road_code":"E1A","road":"新東名","direction":"上下","from":"伊勢原JCT","to":"新秦野IC","window":"9/21 12時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"E20","road":"中央道","direction":"上下","from":"八王子IC","to":"勝沼IC","window":"9/21 18時〜24時 開始見込み","route_overlap":False},
+      {"road_code":"E68","road":"中央道富士吉田線","direction":"上下","from":"大月JCT","to":"都留IC","window":"9/21 18時〜24時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"上","from":"西湘二宮IC","to":"小田原西IC","window":"9/21 10時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"下","from":"早川IC","to":"小田原西IC","window":"9/21 10時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"上下","from":"石橋JCT","to":"石橋IC","window":"9/21 10時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"E84","road":"西湘BP","direction":"上下","from":"小田原西IC","to":"箱根口IC","window":"9/21 18時〜24時 開始見込み","route_overlap":False},
+      {"road_code":"E85","road":"小田厚","direction":"上下","from":"小田原西IC","to":"厚木IC","window":"9/21 12時〜18時 開始見込み","route_overlap":False},
+      {"road_code":"C4","road":"圏央道","direction":"上下","from":"圏央厚木IC","to":"あきる野IC","window":"9/21 12時〜18時 開始見込み","route_overlap":False}
+    ]
+  },
   "f465e15519fa6fac2c82bf8e78760628_916_292.png": {
     "report":"第3報",
     "reported_at":"2026-09-19 16:00",
