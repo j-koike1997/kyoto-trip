@@ -1,0 +1,139 @@
+{
+  "sources": [
+    {
+      "name": "新東名・新名神（東京方面／東海）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=shintoumeiiseshinmeishinnobori",
+      "ok": false
+    },
+    {
+      "name": "新東名（東京方面／関東甲信越）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=shintoumeinobori",
+      "ok": false
+    },
+    {
+      "name": "東名・名神（東京方面／関東甲信越）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=toumeinobori",
+      "ok": false
+    },
+    {
+      "name": "東名・名神（東京方面／東海）",
+      "url": "https://c-nexco.highway-telephone.jp/main/infoselect.php?road=toumeishinnobori",
+      "ok": false
+    }
+  ],
+  "events": [],
+  "weather": [],
+  "errors": [
+    {
+      "source": "新東名・新名神（東京方面／東海）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    },
+    {
+      "source": "新東名（東京方面／関東甲信越）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    },
+    {
+      "source": "東名・名神（東京方面／関東甲信越）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    },
+    {
+      "source": "東名・名神（東京方面／東海）",
+      "error": "HTTP 403: NEXCO route-detail page blocked automated access"
+    }
+  ],
+  "updated_at_jst": "2026-09-22T09:48:19+09:00",
+  "overall": "caution",
+  "advisory_risk": false,
+  "forecast_risk": false,
+  "forecast_zone": null,
+  "advisory_excerpt": "交通情報 | ドライバーズサイト | 高速道路・高速情報はNEXCO 中日本 \n現在 JavaScriptがOFF に設定されています。すべての機能を使用するためには、JavaScriptの設定をONに変更してください。\nメインコンテンツに移動する \n企業情報サイト \nFAQ・お問い合わせ \nlanguage \n言語を選択 \n日本語 \nEnglish \n简体中文 \n繁體中文 \n한국어 \n検索 \n閉じる \nメニュー \n料金・ルート検索 \n料金・ルート検索トップ \n高速道路料金・ルート検索 \nIC名から検索する \n道路一覧から検索する \n高速道路簡易料金表 \n標識ナビまっぷ \n料金所ナビまっぷ \nETC専用料金所 \nETC・割引案内 \nETC・割引案内トップ \n料金割引のご案内 \nETC割引 \n大口・多頻度割引 \n障がい者割引 \nETC各種サービス \nETCの使い方 \nETC専用料金所 \n高速道路周遊パス「速旅」 \n交通情報 \n交通情報トップ \nリアルタイム交通情報 \nリアルタイム交通情報 \n渋滞予測カレンダー​ \n渋滞予測ルート検索 \n主要な渋滞箇所 \n道路情報提供アプリ みちラジ \n渋滞ポイントナビまっぷ \n目で見るハイウェイテレホン \n工事規制情報 \n工事規制情報トップ \n工事情報お役立ちサイト\n～工事規制予定MAP、レーン閉鎖情報、\nリニューアル工事など大規模な工事に関する情報などはこちら～ \nはじめませんかルート＆時間選択\n～ 事前検索で工事中でも快適ドライビング ～ \n安全走行 \n安全走行トップ \n高速道路トラブル対処法 \nセーフティドライブ \n無くそう逆走―高速道路は一方通行です― \n冬の雪道ドライブガイド \n高速道路でやむを得ず停車したら \n緊急地震速報を受信したら \n特殊車両・危険物積載車両のお客さまへ \n重量オーバーは禁止です!! \nSA・PAのご利用に関するお願い \n落下物や故障車などを発見したら!! \n工事規制箇所を通行する際のポイント \nサービスエリア・お買物 \nサービスエリア・お買物トップ \nSA・PA検索 \n特集・イベント \n施設・サービス案内 \nNEOPASA・EXPASA \nイオンNEXCO中日本カード \n旅行・ドライブ \n旅行・ドライブトップ \n高速道路周遊パス「速旅」 \n観光情報・キャンペーン \n宿泊情報 \nツアー・イベント \nよりみち温泉 \nよりみちの宿 \nテラスゲート土岐 \nその他グループ会社運営施設 \n企業情報サイト \nFAQ・お問い合わせ \nLanguage \n日本語 \nEnglish \n简体中文 \n繁體中文 \n한국어 \nドライバーズサイトホーム \n交通情報 \n交通情報 \n現在の渋滞を知る \n全国の高速道路のリアルタイムの道路交通情報を提供しています。よく利用するルートをマイルートとして登録しておくと、通行止めや渋滞などの交通状況をメールで通知する無料のサービスをご利用いただけます。\nリアルタイム交通情報 \nJARTIC提供： \n--時--分 \n現在 \n北海道\n北陸・信越\n中国\n東北\n関東\n東海\n関西\n四国\n九州・沖縄\nリアルタイム交通情報 \nJARTIC提供： \n--時--分 \n現在 \n北海道\n北陸・信越\n中国\n東北\n関東\n東海\n関西\n四国\n九州・沖縄\nカレンダーから検索する \nカレンダーから日付を選択し、道路を指定すると、予測されている渋滞情報を検索することができます。 \n渋滞予測カレンダー \nルートから検索する \n出発インターチェンジと到着インターチェンジを入力すると、目的地までのルート上での、当日の渋滞予測を検索することができます。（NEXCO3社が管理する路線のみ） \n渋滞予測ルート検索 \n主要な渋滞箇所 \nNEXCO中日本管内の高速道路で交通集中に伴う渋滞が発生しやすい箇所をまとめました。",
+  "forecast_table": {
+    "known": false,
+    "image_url": "https://www.c-nexco.co.jp/assets-driver/img/cmn/logo.png",
+    "image_key": "logo.png",
+    "rows": [],
+    "report": null,
+    "reported_at": null
+  },
+  "route_forecast": {
+    "exact": false,
+    "route_risk": null,
+    "relevant": [],
+    "reason": "NEXCO予告表が更新されました。未検証の新表なので旧区間は使用しません"
+  },
+  "parking": {
+    "岡崎": {
+      "display": "NEOPASA岡崎 上り",
+      "route": "新東名",
+      "order": 0,
+      "small": "混雑",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "1",
+      "large_code": "0",
+      "raw_name": "岡崎ＳＡ"
+    },
+    "浜松": {
+      "display": "NEOPASA浜松 上り",
+      "route": "新東名",
+      "order": 1,
+      "small": "満車",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "2",
+      "large_code": "0",
+      "raw_name": "浜松ＳＡ"
+    },
+    "静岡": {
+      "display": "NEOPASA静岡 上り",
+      "route": "新東名",
+      "order": 2,
+      "small": "空",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "0",
+      "large_code": "0",
+      "raw_name": "静岡ＳＡ"
+    },
+    "足柄": {
+      "display": "EXPASA足柄 上り",
+      "route": "東名",
+      "order": 3,
+      "small": "空",
+      "large": "空",
+      "source_ok": true,
+      "small_code": "0",
+      "large_code": "0",
+      "raw_name": "足柄ＳＡ"
+    }
+  },
+  "parking_source_times": [
+    "2026-09-22 09:40"
+  ],
+  "base_recommendation": {
+    "code": "check",
+    "title": "一つ先へ進む前に再判定",
+    "place": "岡崎 → 浜松 → 静岡",
+    "reason": "悪天候または交通規制情報があります。各大型SAで次区間を確認し、通行止め予告が出たら一つ手前でSTOPしてください。",
+    "basis": "caution"
+  },
+  "recommendation": {
+    "code": "check",
+    "title": "退避候補を再編：浜松は満車",
+    "place": "静岡 → 足柄",
+    "reason": "悪天候または交通規制情報があります。各大型SAで次区間を確認し、通行止め予告が出たら一つ手前でSTOPしてください。 浜松は小型車が満車のため、退避先として当てにしません。空いている大型SAを手前から使ってください。",
+    "basis": "parking_network_full",
+    "parking_summary": {
+      "岡崎": "混雑",
+      "浜松": "満車",
+      "静岡": "空",
+      "足柄": "空"
+    }
+  },
+  "official_links": {
+    "ihighway": "https://www.c-ihighway.jp/",
+    "highway_telephone": "https://c-nexco.highway-telephone.jp/main/",
+    "nexco": "https://www.c-nexco.co.jp/jam/"
+  },
+  "note": "NEXCO中日本の公開交通情報を自動判定。最終判断は公式画面・現地表示を優先してください。"
+}
